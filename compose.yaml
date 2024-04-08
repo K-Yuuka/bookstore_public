@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_PASSWORD=passw0rd'
+    ports:
+      - '54797:5432'
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8002:8080"
+    volumes:
+      - ./api/openapi.yml:/openapi.yml
+    environment:
+      SWAGGER_JSON: /openapi.yml

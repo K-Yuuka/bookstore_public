@@ -1,0 +1,356 @@
+openapi: 3.0.0
+info:
+  title: Book Store API
+  version: 1.0.0
+servers:
+  - url: "http://{host}:{port}" # ローカル開発用のサーバーURL
+    variables:
+      host:
+        default: localhost
+      port:
+        enum:
+          - '8080'
+        default: '8080'
+tags:
+  - name : bookstore
+  - name : book
+  - name : author
+paths:
+  /bookstore:
+    post:
+      tags:
+        - bookstore
+      summary: "書籍と著者を登録"
+      description: "書籍と著者を登録します。書籍名と著者名、両方の指定が必要です。"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookAndAuthorRequest'
+      responses:
+        '201':    # status code
+          description: 登録に成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookAuthorSet'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':    # status code
+          $ref: '#/components/responses/Conflict'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+  /bookstore/{bookId}:
+    put:
+      tags:
+        - bookstore
+      summary: "書籍の著者を変更"
+      description: "書籍の著者を変更します"
+      parameters:
+        -  in: path
+           name: bookId
+           schema:
+             type: integer
+           required: true
+           description: "変更対象の書籍IDを指定します"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRequest'
+      responses:
+        '201':    # status code
+          description: 登録に成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookAuthorSet'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':    # status code
+          $ref: '#/components/responses/Conflict'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+  /bookstore/list:
+    get:
+      tags:
+        - bookstore
+      summary: "すべての著者&書籍リストの取得"
+      description: "登録されているすべての著者と書籍のリストを取得します"
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorAndBookList'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+  /bookstore/{authorName}:
+    get:
+      tags:
+        - bookstore
+      summary: "著者名で書籍を検索"
+      description: "指定された著者名で書籍を検索します。部分一致で検索します。"
+      parameters:
+        -  in: path
+           name: authorName
+           schema:
+             type: string
+           required: true
+           description: "著者名を指定します"
+      responses:
+        '200':
+          description: 検索成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorAndBookList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+  /book/{bookName}:
+    get:
+      tags:
+        - book
+      summary: "書籍の検索"
+      description: "指定された書籍名で書籍を検索します。部分一致で検索します。"
+      parameters:
+        -  in: path
+           name: bookName
+           schema:
+             type: string
+           required: true
+           description: "書籍名を指定します"
+      responses:
+        '200':    # status code
+          description: 検索成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookAuthorSetList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+  /book/{bookId}:
+    put:
+      tags:
+        - book
+      summary: "書籍名の変更"
+      description: " 指定された書籍IDの書籍名を変更します。変更後の書籍名と著者の組み合わせがすでに登録済みである場合はエラーとなります。"
+      parameters:
+        -  in: path
+           name: bookId
+           schema:
+             type: integer
+           required: true
+           description: "変更対象の書籍IDを指定します"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookNameRequest'
+      responses:
+        '204':    # status code
+          description: 成功
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - book
+      summary: "書籍を削除"
+      description: "登録されている書籍を削除します"
+      parameters:
+        -  in: path
+           name: bookId
+           schema:
+             type: integer
+           required: true
+           description: "対象の書籍IDを指定します"
+      responses:
+        '204':    # status code
+          description: 削除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+  /author/{authorName}:
+    get:
+      tags:
+        - author
+      summary: "著者の検索"
+      description: "指定された著者名で著者を検索します。部分一致で検索します。"
+      parameters:
+        -  in: path
+           name: authorName
+           schema:
+             type: string
+           required: true
+           description: "著者名を指定します"
+      responses:
+        '200':    # status code
+          description: Success operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+  /author/{authorId}:
+    put:
+      tags:
+        - author
+      summary: "著者名の変更"
+      description: "指定された著者IDの著者名を変更します。変更後の著者名がすでに登録済みである場合はエラーとなります。"
+      parameters:
+        -  in: path
+           name: authorId
+           schema:
+             type: integer
+           required: true
+           description: "著者IDを指定します"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRequest'
+      responses:
+        '201':    # status code
+          description: Success operation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - author
+      summary: "著者を削除"
+      description: "指定された著者IDの著者を削除します。書籍に紐づいている場合、削除に失敗します。"
+      parameters:
+        -  in: path
+           name: authorId
+           schema:
+             type: integer
+           required: true
+           description: "著者IDを指定します"
+      responses:
+        '204':    # status code
+          description: Success operation
+        '409':    # status code
+          $ref: '#/components/responses/Conflict'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  # レスポンス
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: An unexpected exception occurred
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  #スキーマ定義
+  schemas:
+    AuthorAndBookList:
+      type: array
+      items:
+        properties:
+          author:
+            $ref: '#/components/schemas/Author'
+          book:
+            type: array
+            items :
+              $ref: '#/components/schemas/Book'
+    BookList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Book'
+    AuthorList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Author'
+    BookAuthorSetList:
+      type: array
+      items:
+        $ref: '#/components/schemas/BookAuthorSet'
+    BookAuthorSet:
+      type: object
+      properties:
+        book:
+          $ref: '#/components/schemas/Book'
+        author:
+          $ref: '#/components/schemas/Author'
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+    BookAndAuthorRequest:
+      type: object
+      properties:
+        book_name:
+          type: string
+        author_name:
+          type: string
+    BookNameRequest:
+      type: object
+      properties:
+        book_name:
+          type: string
+    AuthorRequest:
+      type: object
+      properties:
+        author_name:
+          type: string
