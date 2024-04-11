@@ -7,10 +7,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import java.lang.RuntimeException
 
 /**
- * 例外処理クラス
+ * 例外ハンドラークラス
  */
 @RestControllerAdvice
 class ExceptionHandler {
@@ -19,7 +18,7 @@ class ExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException::class)
-    public fun handleIllegalArgumentException(exception : IllegalArgumentException) : Error {
+    fun handleIllegalArgumentException(exception: IllegalArgumentException): Error {
         return buildError(exception)
     }
 
@@ -28,7 +27,7 @@ class ExceptionHandler {
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException::class)
-    public fun handleNotFoundException(exception : NotFoundException) : Error {
+    fun handleNotFoundException(exception: NotFoundException): Error {
         return buildError(exception)
     }
 
@@ -37,7 +36,7 @@ class ExceptionHandler {
      */
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(ConflictException::class)
-    public fun handleConflictException(exception : ConflictException) : Error {
+    fun handleConflictException(exception: ConflictException): Error {
         return buildError(exception)
     }
 
@@ -46,11 +45,11 @@ class ExceptionHandler {
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception::class)
-    public fun handleException(exception : Exception) : Error {
+    fun handleException(exception: Exception): Error {
         return Error(message = exception.message)
     }
 
-    private fun buildError(exception: RuntimeException) : Error {
+    private fun buildError(exception: RuntimeException): Error {
         return Error(message = exception.message)
     }
 }

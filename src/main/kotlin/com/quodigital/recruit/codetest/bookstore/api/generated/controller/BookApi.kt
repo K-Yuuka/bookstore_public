@@ -5,7 +5,7 @@
 */
 package com.quodigital.recruit.codetest.bookstore.api.generated.controller
 
-import com.quodigital.recruit.codetest.bookstore.api.generated.model.BookAuthorSet
+import com.quodigital.recruit.codetest.bookstore.api.generated.model.Book
 import com.quodigital.recruit.codetest.bookstore.api.generated.model.BookNameRequest
 import com.quodigital.recruit.codetest.bookstore.api.generated.model.Error
 import io.swagger.v3.oas.annotations.*
@@ -74,20 +74,20 @@ interface BookApi {
     @Operation(
         tags = ["book",],
         summary = "書籍の検索",
-        operationId = "bookBookNameGet",
+        operationId = "bookGet",
         description = """指定された書籍名で書籍を検索します。部分一致で検索します。""",
         responses = [
-            ApiResponse(responseCode = "200", description = "検索成功", content = [Content(array = ArraySchema(schema = Schema(implementation = BookAuthorSet::class)))]),
+            ApiResponse(responseCode = "200", description = "検索成功", content = [Content(array = ArraySchema(schema = Schema(implementation = Book::class)))]),
             ApiResponse(responseCode = "404", description = "Not found", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "200", description = "An unexpected exception occurred", content = [Content(schema = Schema(implementation = Error::class))])
         ]
     )
     @RequestMapping(
             method = [RequestMethod.GET],
-            value = ["/book/{bookName}"],
+            value = ["/book"],
             produces = ["application/json"]
     )
-    fun bookBookNameGet(@Parameter(description = "書籍名を指定します", required = true) @PathVariable("bookName") bookName: kotlin.String): ResponseEntity<List<BookAuthorSet>> {
+    fun bookGet(@Parameter(description = "書籍名を指定します。指定がない場合は登録されている書籍すべてを取得します。") @RequestParam(value = "bookName", required = false) bookName: kotlin.String?): ResponseEntity<List<Book>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

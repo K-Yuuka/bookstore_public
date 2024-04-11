@@ -32,26 +32,6 @@ interface BookstoreApi {
 
     @Operation(
         tags = ["bookstore",],
-        summary = "著者名で書籍を検索",
-        operationId = "bookstoreAuthorNameGet",
-        description = """指定された著者名で書籍を検索します。部分一致で検索します。""",
-        responses = [
-            ApiResponse(responseCode = "200", description = "検索成功", content = [Content(array = ArraySchema(schema = Schema(implementation = AuthorAndBookListInner::class)))]),
-            ApiResponse(responseCode = "404", description = "Not found", content = [Content(schema = Schema(implementation = Error::class))]),
-            ApiResponse(responseCode = "200", description = "An unexpected exception occurred", content = [Content(schema = Schema(implementation = Error::class))])
-        ]
-    )
-    @RequestMapping(
-            method = [RequestMethod.GET],
-            value = ["/bookstore/{authorName}"],
-            produces = ["application/json"]
-    )
-    fun bookstoreAuthorNameGet(@Parameter(description = "著者名を指定します", required = true) @PathVariable("authorName") authorName: kotlin.String): ResponseEntity<List<AuthorAndBookListInner>> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
-    }
-
-    @Operation(
-        tags = ["bookstore",],
         summary = "書籍の著者を変更",
         operationId = "bookstoreBookIdPut",
         description = """書籍の著者を変更します""",
@@ -75,20 +55,21 @@ interface BookstoreApi {
 
     @Operation(
         tags = ["bookstore",],
-        summary = "すべての著者&書籍リストの取得",
-        operationId = "bookstoreListGet",
+        summary = "著者&書籍リストの取得",
+        operationId = "bookstoreGet",
         description = """登録されているすべての著者と書籍のリストを取得します""",
         responses = [
             ApiResponse(responseCode = "200", description = "取得成功", content = [Content(array = ArraySchema(schema = Schema(implementation = AuthorAndBookListInner::class)))]),
+            ApiResponse(responseCode = "404", description = "Not found", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "200", description = "An unexpected exception occurred", content = [Content(schema = Schema(implementation = Error::class))])
         ]
     )
     @RequestMapping(
             method = [RequestMethod.GET],
-            value = ["/bookstore/list"],
+            value = ["/bookstore"],
             produces = ["application/json"]
     )
-    fun bookstoreListGet(): ResponseEntity<List<AuthorAndBookListInner>> {
+    fun bookstoreGet(@Parameter(description = "著者を指定します。指定がない場合は登録されている情報すべてを取得します。") @RequestParam(value = "authorName", required = false) authorName: kotlin.String?): ResponseEntity<List<AuthorAndBookListInner>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 

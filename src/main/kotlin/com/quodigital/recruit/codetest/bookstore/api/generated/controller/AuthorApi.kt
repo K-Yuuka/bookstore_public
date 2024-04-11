@@ -73,7 +73,7 @@ interface AuthorApi {
     @Operation(
         tags = ["author",],
         summary = "著者の検索",
-        operationId = "authorAuthorNameGet",
+        operationId = "authorGet",
         description = """指定された著者名で著者を検索します。部分一致で検索します。""",
         responses = [
             ApiResponse(responseCode = "200", description = "Success operation", content = [Content(array = ArraySchema(schema = Schema(implementation = Author::class)))]),
@@ -84,10 +84,10 @@ interface AuthorApi {
     )
     @RequestMapping(
             method = [RequestMethod.GET],
-            value = ["/author/{authorName}"],
+            value = ["/author"],
             produces = ["application/json"]
     )
-    fun authorAuthorNameGet(@Parameter(description = "著者名を指定します", required = true) @PathVariable("authorName") authorName: kotlin.String): ResponseEntity<List<Author>> {
+    fun authorGet(@Parameter(description = "著者名を指定します。指定がない場合は登録されている著者すべてを取得します。") @RequestParam(value = "authorName", required = false) authorName: kotlin.String?): ResponseEntity<List<Author>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }

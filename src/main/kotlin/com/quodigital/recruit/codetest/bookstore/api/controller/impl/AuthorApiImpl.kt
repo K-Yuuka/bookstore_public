@@ -20,23 +20,26 @@ class AuthorApiImpl(
     /**
      * 著者を検索します
      */
-    override fun authorAuthorNameGet(authorName: String): ResponseEntity<List<Author>> =
-        ResponseEntity.ok(toApiAuthorListModel(bookStoreService.findAuthorByName(authorName)))
+    override fun authorGet(authorName: String?): ResponseEntity<List<Author>> = ResponseEntity.ok(
+        toApiAuthorListModel(
+            bookStoreService.getAuthorByName(authorName).getOrThrow()
+        )
+    )
 
     /**
      * 著者名を編集します
      */
     override fun authorAuthorIdPut(authorId: Int, authorRequest: AuthorRequest): ResponseEntity<Unit> {
-        authorRequest.authorName ?: let { throw IllegalArgumentException("author_name is required.") }
-        bookStoreService.editAuthor(authorId, authorRequest.authorName)
-        return ResponseEntity.ok(null)
+        require(!authorRequest.authorName.isNullOrBlank()) { "author_name is required." }
+        bookStoreService.editAuthorName(authorId, authorRequest.authorName).getOrThrow()
+        return ResponseEntity.noContent().build()
     }
 
     /**
      * 著者を削除します
      */
     override fun authorAuthorIdDelete(authorId: Int): ResponseEntity<Unit> {
-        bookStoreService.deleteAuthor(authorId)
+        bookStoreService.deleteAuthor(authorId).getOrThrow()
         return ResponseEntity.noContent().build()
     }
 

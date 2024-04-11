@@ -3,39 +3,41 @@ package com.quodigital.recruit.codetest.bookstore.db.repository
 import com.quodigital.recruit.codetest.bookstore.db.generated.tables.pojos.JAuthor
 import com.quodigital.recruit.codetest.bookstore.db.generated.tables.pojos.JBook
 import com.quodigital.recruit.codetest.bookstore.db.generated.tables.pojos.JBookAuthor
+import com.quodigital.recruit.codetest.bookstore.db.generated.tables.records.JAuthorRecord
+import com.quodigital.recruit.codetest.bookstore.db.generated.tables.records.JBookRecord
+import org.jooq.Result
 
 /**
  * 書籍&著者のレポジトリ
  */
 interface BookAuthorRepository {
     /**
-     * 全情報取得
-     *
-     * @return 取得結果リスト
+     * 登録されている書籍と著者の情報をすべて取得する
      */
-    fun getAll(): List<Pair<JAuthor, JBook>>
+    fun getAll(): Map<JAuthor, List<JBook>>
 
     /**
-     * 著者名で書籍を取得する
-     *
-     * @param authorName 著者名
-     * @return 取得結果リスト
+     * [authorName]（部分一致）で書籍を検索して、著者と紐づく書籍リストを返す
      */
-    fun getByAuthorName(authorName: String): List<Pair<JAuthor, JBook>>
+    fun getByAuthorName(authorName: String): Map<JAuthor, List<JBook>>
 
     /**
-     * 指定の書籍と著者の組み合わせが登録済みかどうか
-     *
-     * @param bookName 書籍名
-     * @param authorName 著者名
-     * @return 登録済みである場合はtrue
+     * [authorName]で書籍を検索して、著者と紐づく書籍リストを返す。[exactMatch]がtrueの場合は完全一致で検索する。
+     */
+    fun getByAuthorName(authorName: String, exactMatch: Boolean): Map<JAuthor, List<JBook>>
+
+    /**
+     * [bookName]と[authorName]の組み合わせが存在する場合はtrueを返す
      */
     fun exists(bookName: String, authorName: String): Boolean
 
     /**
-     * 書籍と著者の関連を追加
-     * @param bookId 書籍ID
-     * @param authorId 著者ID
+     * [bookId]と[authorId]の関連を登録して、登録情報を返す
      */
     fun add(bookId: Int, authorId: Int): JBookAuthor?
+
+    /**
+     * [bookId]で指定された書籍の著者を[authorId]に変更する
+     */
+    fun editAuthor(bookId: Int, authorId: Int)
 }

@@ -1,48 +1,14 @@
 package com.quodigital.recruit.codetest.bookstore.db.repository
 
 import com.quodigital.recruit.codetest.bookstore.db.generated.tables.pojos.JAuthor
+import com.quodigital.recruit.codetest.bookstore.db.generated.tables.pojos.JBook
 
 /**
  * 著者レポジトリ
  */
-interface AuthorRepository {
+interface AuthorRepository : NameIdRepository<JAuthor> {
     /**
-     * 著者をすべて取得する
-     *
-     * @return 結果リスト
-     */
-    fun getAll(): List<JAuthor>
-
-    /**
-     * 著者を名前で検索する
-     *
-     * @param authorName 著者名
-     * @return 検索結果リスト
-     */
-    fun getByName(authorName: String): List<JAuthor>
-
-    /**
-     * 著者情報を追加する
-     * @param authorName 著者名
-     * @return 登録結果
-     */
-    fun add(authorName: String): JAuthor?
-
-    /**
-     * 著者情報の追加する
-     * すでに存在する場合はその情報を返す
-     * @param authorName 著者名
-     * @return 登録情報 または 登録済み情報
+     * [authorName]の著者が未登録の場合には登録して登録情報を返し、登録済みの場合には登録済み情報を取得する
      */
     fun addOrGetExistsInfo(authorName: String): JAuthor
-
-    /**
-     * 著者を編集する
-     */
-    fun edit(authorId: Int, authorName: String)
-
-    /**
-     * 著者を削除する
-     */
-    fun delete(authorId: Int)
 }

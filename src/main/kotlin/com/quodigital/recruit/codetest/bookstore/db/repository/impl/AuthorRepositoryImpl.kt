@@ -3,6 +3,7 @@ package com.quodigital.recruit.codetest.bookstore.db.repository.impl
 import com.quodigital.recruit.codetest.bookstore.db.generated.tables.pojos.JAuthor
 import com.quodigital.recruit.codetest.bookstore.db.generated.tables.references.AUTHOR
 import com.quodigital.recruit.codetest.bookstore.db.repository.AuthorRepository
+import org.jooq.Condition
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 
@@ -13,30 +14,19 @@ import org.springframework.stereotype.Repository
 class AuthorRepositoryImpl(
     private val dslContext: DSLContext
 ) : AuthorRepository {
+    override fun getByName(name: String): List<JAuthor> {
+        return get(AUTHOR.AUTHOR_NAME.like("%${name}%"))
+    }
+
     override fun getAll(): List<JAuthor> {
-        return dslContext.select()
-            .from(AUTHOR)
-            .fetch {
-                it.into(JAuthor::class.java)
-            }
-            .toList()
+        return get(null)
     }
 
-    override fun getByName(authorName: String): List<JAuthor> {
-        return dslContext.select()
-            .from(AUTHOR)
-            .where(AUTHOR.AUTHOR_NAME.like("%${authorName}%"))
-            .fetch {
-                it.into(JAuthor::class.java)
-            }
-            .toList()
-    }
-
-    override fun add(authorName: String): JAuthor? {
+    override fun add(name: String): JAuthor? {
         // すでに同名の著者が登録済みである場合はエラー
         return dslContext
             .insertInto(AUTHOR, AUTHOR.AUTHOR_NAME)
-            .values(authorName)
+            .values(name)
             .onConflict()
             .doNothing()
             .returningResult(AUTHOR.AUTHOR_ID, AUTHOR.AUTHOR_NAME)
@@ -56,26 +46,31 @@ class AuthorRepositoryImpl(
             ?: get(authorName)!!
     }
 
-    override fun edit(authorId: Int, authorName: String) {
+    override fun edit(id: Int, name: String) {
         dslContext
             .update(AUTHOR)
-            .set(AUTHOR.AUTHOR_NAME, authorName)
-            .where(AUTHOR.AUTHOR_ID.eq(authorId))
+            .set(AUTHOR.AUTHOR_NAME, name)
+            .where(AUTHOR.AUTHOR_ID.eq(id))
             .execute()
     }
 
-    override fun delete(authorId: Int) {
+    override fun delete(id: Int) {
         dslContext
             .delete(AUTHOR)
-            .where(AUTHOR.AUTHOR_ID.eq(authorId))
+            .where(AUTHOR.AUTHOR_ID.eq(id))
             .execute()
     }
 
+    override fun exists(id: Int): Boolean = dslContext.fetchExists(AUTHOR, AUTHOR.AUTHOR_ID.eq(id))
+
     private fun get(authorName: String): JAuthor? {
-        return dslContext.select()
-            .from(AUTHOR)
-            .where(AUTHOR.AUTHOR_NAME.eq(authorName))
-            .fetchOne()
-            ?.into(JAuthor::class.java)
+        val resultList = get(AUTHOR.AUTHOR_NAME.eq(authorName))
+        return if(resultList.isEmpty()) null else resultList[0]
+    }
+
+    private fun get(condition: Condition?): List<JAuthor> {
+        val query = dslContext.select().from(AUTHOR)
+        condition?.let { query.where(condition) }
+        return query.fetch { it.into(JAuthor::class.java) }.toList()
     }
 }

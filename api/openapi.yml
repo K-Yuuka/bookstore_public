@@ -41,6 +41,29 @@ paths:
           $ref: '#/components/responses/Conflict'
         'default':
           $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+        - bookstore
+      summary: "著者&書籍リストの取得"
+      description: "登録されているすべての著者と書籍のリストを取得します"
+      parameters:
+        -  in: query
+           name: authorName
+           schema:
+             type: string
+           required: false
+           description: "著者を指定します。指定がない場合は登録されている情報すべてを取得します。"
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorAndBookList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        'default':
+          $ref: '#/components/responses/InternalServerError'
   /bookstore/{bookId}:
     put:
       tags:
@@ -75,65 +98,26 @@ paths:
           $ref: '#/components/responses/Conflict'
         'default':
           $ref: '#/components/responses/InternalServerError'
-  /bookstore/list:
-    get:
-      tags:
-        - bookstore
-      summary: "すべての著者&書籍リストの取得"
-      description: "登録されているすべての著者と書籍のリストを取得します"
-      responses:
-        '200':
-          description: 取得成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthorAndBookList'
-        'default':
-          $ref: '#/components/responses/InternalServerError'
-  /bookstore/{authorName}:
-    get:
-      tags:
-        - bookstore
-      summary: "著者名で書籍を検索"
-      description: "指定された著者名で書籍を検索します。部分一致で検索します。"
-      parameters:
-        -  in: path
-           name: authorName
-           schema:
-             type: string
-           required: true
-           description: "著者名を指定します"
-      responses:
-        '200':
-          description: 検索成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthorAndBookList'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        'default':
-          $ref: '#/components/responses/InternalServerError'
-  /book/{bookName}:
+  /book:
     get:
       tags:
         - book
       summary: "書籍の検索"
       description: "指定された書籍名で書籍を検索します。部分一致で検索します。"
       parameters:
-        -  in: path
+        -  in: query
            name: bookName
            schema:
              type: string
-           required: true
-           description: "書籍名を指定します"
+           required: false
+           description: "書籍名を指定します。指定がない場合は登録されている書籍すべてを取得します。"
       responses:
         '200':    # status code
           description: 検索成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookAuthorSetList'
+                $ref: '#/components/schemas/BookList'
         '404':
           $ref: '#/components/responses/NotFound'
         'default':
@@ -187,19 +171,19 @@ paths:
           $ref: '#/components/responses/NotFound'
         'default':
           $ref: '#/components/responses/InternalServerError'
-  /author/{authorName}:
+  /author:
     get:
       tags:
         - author
       summary: "著者の検索"
       description: "指定された著者名で著者を検索します。部分一致で検索します。"
       parameters:
-        -  in: path
+        -  in: query
            name: authorName
            schema:
              type: string
-           required: true
-           description: "著者名を指定します"
+           required: false
+           description: "著者名を指定します。指定がない場合は登録されている著者すべてを取得します。"
       responses:
         '200':    # status code
           description: Success operation

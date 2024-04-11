@@ -2,9 +2,8 @@ package com.quodigital.recruit.codetest.bookstore.api.controller.impl
 
 import com.quodigital.recruit.codetest.bookstore.api.generated.controller.BookstoreApi
 import com.quodigital.recruit.codetest.bookstore.api.generated.model.*
-import com.quodigital.recruit.codetest.bookstore.model.AuthorAndBookList
-import com.quodigital.recruit.codetest.bookstore.model.AuthorInfo
-import com.quodigital.recruit.codetest.bookstore.model.BookInfo
+import com.quodigital.recruit.codetest.bookstore.model.AuthorAndRelationalBooks
+import com.quodigital.recruit.codetest.bookstore.model.BookAuthorInfo
 import com.quodigital.recruit.codetest.bookstore.service.BookStoreService
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -23,46 +22,47 @@ class BookstoreApiImpl(
      * 書籍と著者を追加する
      */
     override fun bookstorePost(bookAndAuthorRequest: BookAndAuthorRequest): ResponseEntity<BookAuthorSet> {
-        bookAndAuthorRequest.bookName ?: let { throw IllegalArgumentException("book_name is required.") }
-        bookAndAuthorRequest.authorName ?: let { throw IllegalArgumentException("author_name is required.") }
+        require(!bookAndAuthorRequest.bookName.isNullOrBlank()) { "book_name is required." }
+        require(!bookAndAuthorRequest.authorName.isNullOrBlank()) { "author_name is required." }
         return ResponseEntity.created(URI("")).body(
             toApiBookAuthorSetModel(
                 bookService.addBookAndAuthor(bookAndAuthorRequest.bookName, bookAndAuthorRequest.authorName)
+                    .getOrThrow()
             )
         )
     }
 
     /**
-     * 書籍と著者者のリストを取得する
+     * 書籍の著者を変更する
      */
-    override fun bookstoreListGet(): ResponseEntity<List<AuthorAndBookListInner>> =
-        ResponseEntity.ok(toApiAuthorAndBookListInnerModelList(bookService.getAuthorAndBookList()))
-
-    /**
-     * 著者を指定して書籍を検索する
-     */
-    override fun bookstoreAuthorNameGet(authorName: String): ResponseEntity<List<AuthorAndBookListInner>> =
-        ResponseEntity.ok(toApiAuthorAndBookListInnerModelList(bookService.findBookByAuthorName(authorName)))
-
-    private fun toApiBookAuthorSetModel(bookAuthor: Pair<BookInfo, AuthorInfo>): BookAuthorSet {
-        return BookAuthorSet(
-            Book(bookAuthor.first.bookId, bookAuthor.first.bookName),
-            Author(bookAuthor.second.authorId, bookAuthor.second.authorName)
-        )
+    override fun bookstoreBookIdPut(bookId: Int, authorRequest: AuthorRequest): ResponseEntity<BookAuthorSet> {
+        require(!authorRequest.authorName.isNullOrBlank()) { "author_name is required." }
+        bookService.editAuthor(bookId, authorRequest.authorName).getOrThrow()
+        return ResponseEntity.noContent().build()
     }
 
-    private fun toApiAuthorAndBookListInnerModelList(authorBookSetList: List<AuthorAndBookList>)
+    /**
+     * 著者&書籍を取得する
+     */
+    override fun bookstoreGet(authorName: String?): ResponseEntity<List<AuthorAndBookListInner>> = ResponseEntity.ok(
+        toApiAuthorAndBookListInnerModelList(
+            bookService.getBookListByAuthorName(authorName).getOrThrow()
+        )
+    )
+
+    private fun toApiBookAuthorSetModel(bookAuthor: BookAuthorInfo): BookAuthorSet =
+        BookAuthorSet(
+            Book(bookAuthor.bookInfo.bookId, bookAuthor.bookInfo.bookName),
+            Author(bookAuthor.authorInfo.authorId, bookAuthor.authorInfo.authorName)
+        )
+
+    private fun toApiAuthorAndBookListInnerModelList(authorBookSetList: List<AuthorAndRelationalBooks>)
             : List<AuthorAndBookListInner> =
         authorBookSetList.map { toApiAuthorAndBookListInnerModel(it) }.toList()
 
-    private fun toApiAuthorAndBookListInnerModel(authorBookSet: AuthorAndBookList): AuthorAndBookListInner {
-        return AuthorAndBookListInner(
-            Author(
-                authorBookSet.author.authorId, authorBookSet.author.authorName
-            ),
-            authorBookSet.bookList.map {
-                Book(it.bookId, it.bookName)
-            }.toList()
+    private fun toApiAuthorAndBookListInnerModel(authorBookSet: AuthorAndRelationalBooks): AuthorAndBookListInner =
+        AuthorAndBookListInner(
+            Author(authorBookSet.author.authorId, authorBookSet.author.authorName),
+            authorBookSet.bookList.map { Book(it.bookId, it.bookName) }.toList()
         )
-    }
 }

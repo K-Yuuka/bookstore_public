@@ -1,9 +1,8 @@
 package com.quodigital.recruit.codetest.bookstore.service
 
-import com.quodigital.recruit.codetest.bookstore.exception.ConflictException
-import com.quodigital.recruit.codetest.bookstore.exception.NotFoundException
-import com.quodigital.recruit.codetest.bookstore.model.AuthorAndBookList
+import com.quodigital.recruit.codetest.bookstore.model.AuthorAndRelationalBooks
 import com.quodigital.recruit.codetest.bookstore.model.AuthorInfo
+import com.quodigital.recruit.codetest.bookstore.model.BookAuthorInfo
 import com.quodigital.recruit.codetest.bookstore.model.BookInfo
 import org.springframework.stereotype.Service
 
@@ -14,75 +13,51 @@ import org.springframework.stereotype.Service
 interface BookStoreService {
     /**
      * 書籍と著者名のリストを取得する
-     *
-     * @return 取得結果
      */
-    fun getAuthorAndBookList(): List<AuthorAndBookList>
+    fun getAuthorAndRelationalBooksList(): List<AuthorAndRelationalBooks>
 
     /**
      *  書籍と著者を追加する（組み合わせの重複禁止）
-     *
-     * @param bookName 書籍名
-     * @param authorName 著者
-     * @return 追加した書籍と著者の情報
      */
-    @Throws(ConflictException::class)
-    fun addBookAndAuthor(bookName: String, authorName: String): Pair<BookInfo, AuthorInfo>
+    fun addBookAndAuthor(bookName: String, authorName: String): Result<BookAuthorInfo>
 
     /**
-     * 名前で書籍を検索する
-     *
-     * @param bookName 書籍名
-     * @return 検索結果リスト
+     * [bookName]で書籍を検索する。nullの場合は登録されている書籍すべてを取得する
      */
-    fun findBookByName(bookName: String): List<Pair<BookInfo, AuthorInfo>>
+    fun getBookListByName(bookName: String?): Result<List<BookInfo>>
 
     /**
-     *  著者名で書籍を検索する
-     *
-     * @param authorName 著者
-     * @return 検索結果リスト
-     * @throws NotFoundException 検索結果の件数が0件の場合
+     *  [authorName]で書籍を検索する。nullの場合は登録されている書籍&著者すべてを取得する
      */
-    @Throws(NotFoundException::class)
-    fun findBookByAuthorName(authorName: String): List<AuthorAndBookList>
+    fun getBookListByAuthorName(authorName: String?): Result<List<AuthorAndRelationalBooks>>
 
     /**
-     * 名前で著者を検索する
-     *
-     * @param authorName 著者名
-     * @return 検索結果リスト
+     * [authorName]で著者を検索する。nullの場合は登録されている書籍すべてを取得する
      */
-    fun findAuthorByName(authorName: String): List<AuthorInfo>
+    fun getAuthorByName(authorName: String?): Result<List<AuthorInfo>>
 
     /**
-     * 書籍を編集する
-     *
-     * @param bookId 編集対象の書籍ID
-     * @param bookName 書籍名
+     * [bookId]で指定された書籍の名前を[bookName]に変更する
      */
-    @Throws(ConflictException::class)
-    fun editBook(bookId: Int, bookName: String)
+    fun editBookName(bookId: Int, bookName: String) : Result<Unit>
 
     /**
-     * 著者を編集する
-     *
-     * @param authorId 編集対象の著者ID
-     * @param authorName 編集後の著者名
+     * [authorId]で指定された著者の名前を[authorName]に変更する
      */
-    fun editAuthor(authorId: Int, authorName: String)
+    fun editAuthorName(authorId: Int, authorName: String) : Result<Unit>
 
     /**
-     * 著者を削除する
-     * @param authorId 著者ID
+     * [bookId]で指定された書籍の著者を[authorName]に変更する
      */
-    @Throws(ConflictException::class)
-    fun deleteAuthor(authorId: Int)
+    fun editAuthor(bookId: Int, authorName: String): Result<Unit>
 
     /**
-     * 書籍を削除する
-     *
-     * @param bookId 書籍ID
+     * [bookId]で指定された書籍を削除する
      */
-    fun deleteBook(bookId: Int)
+    fun deleteBook(bookId: Int) : Result<Unit>
+
+    /**
+     * [authorId]で指定された著者を削除する
+     */
+    fun deleteAuthor(authorId: Int) : Result<Unit>
 }
