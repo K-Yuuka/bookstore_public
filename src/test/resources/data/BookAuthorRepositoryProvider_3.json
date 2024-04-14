@@ -1,0 +1,56 @@
+[
+  {
+    "pair": {
+      "first": {
+        "authorId": 1,
+        "authorName": "name1"
+      },
+      "second": [
+        {
+          "bookId": 1,
+          "bookName": "name1"
+        },
+        {
+          "bookId": 2,
+          "bookName": "name2"
+        }
+      ]
+    }
+  },
+  {
+    "pair": {
+      "first": {
+        "authorId": 2,
+        "authorName": "name2"
+      },
+      "second": [
+        {
+          "bookId": 3,
+          "bookName": "name3"
+        },
+        {
+          "bookId": 4,
+          "bookName": "name4"
+        },
+        {
+          "bookId": 5,
+          "bookName": "name5"
+        }
+      ]
+    }
+  },
+  {
+    "pair": {
+      "first": {
+        "authorId": 3,
+        "authorName": "name3"
+      },
+      "second": [
+        {
+          "bookId": 6,
+          "bookName": "name6"
+        }
+      ]
+    }
+  }
+]

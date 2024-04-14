@@ -1,0 +1,20 @@
+[
+  {
+    "pair": {
+      "first": {
+        "authorId": 1,
+        "authorName": "name1"
+      },
+      "second": [
+        {
+          "bookId": 1,
+          "bookName": "name1"
+        },
+        {
+          "bookId": 2,
+          "bookName": "name2"
+        }
+      ]
+    }
+  }
+]
