@@ -12,11 +12,6 @@ import org.springframework.stereotype.Service
 @Service
 interface BookStoreService {
     /**
-     * 書籍と著者名のリストを取得する
-     */
-    fun getAuthorAndRelationalBooksList(): List<AuthorAndRelationalBooks>
-
-    /**
      *  書籍と著者を追加する（組み合わせの重複禁止）
      */
     fun addBookAndAuthor(bookName: String, authorName: String): Result<BookAuthorInfo>
@@ -34,7 +29,7 @@ interface BookStoreService {
     /**
      * [authorName]で著者を検索する。nullの場合は登録されている書籍すべてを取得する
      */
-    fun getAuthorByName(authorName: String?): Result<List<AuthorInfo>>
+    fun getAuthorListByName(authorName: String?): Result<List<AuthorInfo>>
 
     /**
      * [bookId]で指定された書籍の名前を[bookName]に変更する
@@ -49,7 +44,7 @@ interface BookStoreService {
     /**
      * [bookId]で指定された書籍の著者を[authorName]に変更する
      */
-    fun editAuthor(bookId: Int, authorName: String): Result<Unit>
+    fun editAuthor(bookId: Int, authorName: String): Result<BookAuthorInfo>
 
     /**
      * [bookId]で指定された書籍を削除する

@@ -17,8 +17,8 @@ class ExceptionHandler {
      * HTTP400
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(exception: IllegalArgumentException): Error {
+    @ExceptionHandler(value = [IllegalArgumentException::class, IllegalStateException::class])
+    fun handleIllegalArgumentException(exception: RuntimeException): Error {
         return buildError(exception)
     }
 
@@ -27,7 +27,7 @@ class ExceptionHandler {
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException::class)
-    fun handleNotFoundException(exception: NotFoundException): Error {
+    fun handleNotFoundException(exception: RuntimeException): Error {
         return buildError(exception)
     }
 
@@ -36,7 +36,7 @@ class ExceptionHandler {
      */
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(ConflictException::class)
-    fun handleConflictException(exception: ConflictException): Error {
+    fun handleConflictException(exception: RuntimeException): Error {
         return buildError(exception)
     }
 

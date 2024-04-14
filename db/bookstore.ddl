@@ -1,5 +1,5 @@
 -- Project Name : bookstore
--- Date/Time    : 2024/04/08 22:14:08
+-- Date/Time    : 2024/04/14 8:34:40
 -- Author       : kumam
 -- RDBMS Type   : PostgreSQL
 -- Application  : A5:SQL Mk-2
@@ -17,16 +17,13 @@
 create table book_author (
   book_id integer not null
   , author_id integer not null
-  , constraint book_author_PKC primary key (book_id)
+  , constraint book_author_PKC primary key (book_id,author_id)
 ) ;
 
-alter table book_author add constraint book_author_IX1
-  unique (book_id,author_id) ;
-
-create index book_author_IX2
+create index book_author_IX1
   on book_author(author_id);
 
-create index book_author_IX3
+create index book_author_IX2
   on book_author(book_id);
 
 -- 著者

@@ -91,14 +91,13 @@ Page=MAIN
 Left=450
 Top=550
 Field="書籍ID","book_id","integer","NOT NULL",0,"","",$FFFFFFFF,""
-Field="著者ID","author_id","integer","NOT NULL",,"","",$FFFFFFFF,""
-Index==2,book_id,author_id
+Field="著者ID","author_id","integer","NOT NULL",1,"","",$FFFFFFFF,""
 Index==0,author_id
 Index==0,book_id
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20240408221401
+ModifiedDateTime=20240414083429
 Position="MAIN",450,550
 ZOrder=10
 
@@ -106,7 +105,7 @@ ZOrder=10
 Entity1=book
 Entity2=book_author
 RelationType1=2
-RelationType2=2
+RelationType2=3
 Fields1=book_id
 Fields2=book_id
 Cardinarity1=
@@ -116,7 +115,7 @@ Dependence=1
 Caption=
 PName=
 FkOnDeleteOption=cascade
-ModifiedDateTime=20240408214531
+ModifiedDateTime=20240414083639
 LineMode=0
 Bar1=412
 Bar2=588
@@ -138,7 +137,7 @@ Position="MAIN",0,2558,7442,10000,R,R,""
 Dependence=0
 Caption=
 PName=
-ModifiedDateTime=20240408214558
+ModifiedDateTime=20240414083647
 LineMode=0
 Bar1=256
 Bar2=744

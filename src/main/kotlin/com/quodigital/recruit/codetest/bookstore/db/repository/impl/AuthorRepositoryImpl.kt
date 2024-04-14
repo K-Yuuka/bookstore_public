@@ -18,54 +18,61 @@ class AuthorRepositoryImpl(
         return get(AUTHOR.AUTHOR_NAME.like("%${name}%"))
     }
 
+    override fun getById(id: Int): JAuthor? {
+        return dslContext
+            .select()
+            .from(AUTHOR)
+            .where(AUTHOR.AUTHOR_ID.eq(id))
+            .fetchOne()
+            ?.into(JAuthor::class.java)
+    }
+
     override fun getAll(): List<JAuthor> {
         return get(null)
     }
 
-    override fun add(name: String): JAuthor? {
-        // すでに同名の著者が登録済みである場合はエラー
+    override fun add(name: String): JAuthor {
         return dslContext
             .insertInto(AUTHOR, AUTHOR.AUTHOR_NAME)
             .values(name)
-            .onConflict()
-            .doNothing()
             .returningResult(AUTHOR.AUTHOR_ID, AUTHOR.AUTHOR_NAME)
             .fetchOne()
-            ?.into(JAuthor::class.java)
+            ?.into(JAuthor::class.java)!!
     }
 
     override fun addOrGetExistsInfo(authorName: String): JAuthor {
-        return dslContext
-            .insertInto(AUTHOR, AUTHOR.AUTHOR_NAME)
-            .values(authorName)
-            .onConflict()
-            .doNothing()
-            .returningResult(AUTHOR.AUTHOR_ID, AUTHOR.AUTHOR_NAME)
-            .fetchOne()
-            ?.into(JAuthor::class.java)
-            ?: get(authorName)!!
+        return get(authorName) ?: let {
+            return dslContext
+                .insertInto(AUTHOR, AUTHOR.AUTHOR_NAME)
+                .values(authorName)
+                .onConflict()
+                .doNothing()
+                .returningResult(AUTHOR.AUTHOR_ID, AUTHOR.AUTHOR_NAME)
+                .fetchOne()
+                ?.into(JAuthor::class.java)!!
+        }
     }
 
-    override fun edit(id: Int, name: String) {
-        dslContext
+    override fun edit(id: Int, name: String): Boolean {
+        return dslContext
             .update(AUTHOR)
             .set(AUTHOR.AUTHOR_NAME, name)
             .where(AUTHOR.AUTHOR_ID.eq(id))
-            .execute()
+            .execute() == 1
     }
 
-    override fun delete(id: Int) {
-        dslContext
+    override fun delete(id: Int): Boolean {
+        return dslContext
             .delete(AUTHOR)
             .where(AUTHOR.AUTHOR_ID.eq(id))
-            .execute()
+            .execute() == 1
     }
 
     override fun exists(id: Int): Boolean = dslContext.fetchExists(AUTHOR, AUTHOR.AUTHOR_ID.eq(id))
 
     private fun get(authorName: String): JAuthor? {
         val resultList = get(AUTHOR.AUTHOR_NAME.eq(authorName))
-        return if(resultList.isEmpty()) null else resultList[0]
+        return if (resultList.isEmpty()) null else resultList[0]
     }
 
     private fun get(condition: Condition?): List<JAuthor> {

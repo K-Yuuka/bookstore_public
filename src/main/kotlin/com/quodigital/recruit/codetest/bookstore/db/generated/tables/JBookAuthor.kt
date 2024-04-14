@@ -5,9 +5,9 @@ package com.quodigital.recruit.codetest.bookstore.db.generated.tables
 
 
 import com.quodigital.recruit.codetest.bookstore.db.generated.JPublic
+import com.quodigital.recruit.codetest.bookstore.db.generated.indexes.BOOK_AUTHOR_IX1
 import com.quodigital.recruit.codetest.bookstore.db.generated.indexes.BOOK_AUTHOR_IX2
-import com.quodigital.recruit.codetest.bookstore.db.generated.indexes.BOOK_AUTHOR_IX3
-import com.quodigital.recruit.codetest.bookstore.db.generated.keys.BOOK_AUTHOR_IX1
+import com.quodigital.recruit.codetest.bookstore.db.generated.keys.BOOK_AUTHOR_IX3
 import com.quodigital.recruit.codetest.bookstore.db.generated.keys.BOOK_AUTHOR_PKC
 import com.quodigital.recruit.codetest.bookstore.db.generated.keys.BOOK_AUTHOR__BOOK_AUTHOR_FK1
 import com.quodigital.recruit.codetest.bookstore.db.generated.keys.BOOK_AUTHOR__BOOK_AUTHOR_FK2
@@ -121,9 +121,9 @@ open class JBookAuthor(
         override fun `as`(alias: Table<*>): JBookAuthorPath = JBookAuthorPath(alias.qualifiedName, this)
     }
     override fun getSchema(): Schema? = if (aliased()) null else JPublic.PUBLIC
-    override fun getIndexes(): List<Index> = listOf(BOOK_AUTHOR_IX2, BOOK_AUTHOR_IX3)
+    override fun getIndexes(): List<Index> = listOf(BOOK_AUTHOR_IX1, BOOK_AUTHOR_IX2)
     override fun getPrimaryKey(): UniqueKey<JBookAuthorRecord> = BOOK_AUTHOR_PKC
-    override fun getUniqueKeys(): List<UniqueKey<JBookAuthorRecord>> = listOf(BOOK_AUTHOR_IX1)
+    override fun getUniqueKeys(): List<UniqueKey<JBookAuthorRecord>> = listOf(BOOK_AUTHOR_IX3)
     override fun getReferences(): List<ForeignKey<JBookAuthorRecord, *>> = listOf(BOOK_AUTHOR__BOOK_AUTHOR_FK2, BOOK_AUTHOR__BOOK_AUTHOR_FK1)
 
     private lateinit var _book: JBookPath

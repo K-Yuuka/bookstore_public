@@ -35,6 +35,7 @@ interface AuthorApi {
         description = """指定された著者IDの著者を削除します。書籍に紐づいている場合、削除に失敗します。""",
         responses = [
             ApiResponse(responseCode = "204", description = "Success operation"),
+            ApiResponse(responseCode = "404", description = "Not found", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "409", description = "Conflict", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "200", description = "An unexpected exception occurred", content = [Content(schema = Schema(implementation = Error::class))])
         ]
@@ -54,9 +55,10 @@ interface AuthorApi {
         operationId = "authorAuthorIdPut",
         description = """指定された著者IDの著者名を変更します。変更後の著者名がすでに登録済みである場合はエラーとなります。""",
         responses = [
-            ApiResponse(responseCode = "201", description = "Success operation"),
+            ApiResponse(responseCode = "204", description = "Success operation"),
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "404", description = "Not found", content = [Content(schema = Schema(implementation = Error::class))]),
+            ApiResponse(responseCode = "409", description = "Conflict", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "200", description = "An unexpected exception occurred", content = [Content(schema = Schema(implementation = Error::class))])
         ]
     )
@@ -77,7 +79,6 @@ interface AuthorApi {
         description = """指定された著者名で著者を検索します。部分一致で検索します。""",
         responses = [
             ApiResponse(responseCode = "200", description = "Success operation", content = [Content(array = ArraySchema(schema = Schema(implementation = Author::class)))]),
-            ApiResponse(responseCode = "400", description = "Bad request", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "404", description = "Not found", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "200", description = "An unexpected exception occurred", content = [Content(schema = Schema(implementation = Error::class))])
         ]

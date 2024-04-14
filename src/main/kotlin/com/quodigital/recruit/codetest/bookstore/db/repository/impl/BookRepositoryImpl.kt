@@ -19,6 +19,16 @@ class BookRepositoryImpl(
         return get(BOOK.BOOK_NAME.like("%${name}%"))
     }
 
+    override fun getById(id: Int): JBook? {
+        return dslContext
+            .select()
+            .from(BOOK)
+            .where(BOOK.BOOK_ID.eq(id))
+            .fetchOne {
+                it.into(JBook::class.java)
+            }
+    }
+
     override fun getAll(): List<JBook> {
         return get(null)
     }
@@ -32,19 +42,19 @@ class BookRepositoryImpl(
             ?.into(JBook::class.java)!!
     }
 
-    override fun edit(id: Int, name: String) {
-        dslContext
+    override fun edit(id: Int, name: String): Boolean {
+        return dslContext
             .update(BOOK)
             .set(BOOK.BOOK_NAME, name)
             .where(BOOK.BOOK_ID.eq(id))
-            .execute()
+            .execute() == 1
     }
 
-    override fun delete(id: Int) {
-        dslContext
+    override fun delete(id: Int): Boolean {
+        return dslContext
             .delete(BOOK)
             .where(BOOK.BOOK_ID.eq(id))
-            .execute()
+            .execute() == 1
     }
 
     override fun exists(id: Int): Boolean = dslContext.fetchExists(BOOK, BOOK.BOOK_ID.eq(id))

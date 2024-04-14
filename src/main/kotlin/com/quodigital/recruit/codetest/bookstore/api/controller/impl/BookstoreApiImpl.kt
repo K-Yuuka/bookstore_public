@@ -37,8 +37,11 @@ class BookstoreApiImpl(
      */
     override fun bookstoreBookIdPut(bookId: Int, authorRequest: AuthorRequest): ResponseEntity<BookAuthorSet> {
         require(!authorRequest.authorName.isNullOrBlank()) { "author_name is required." }
-        bookService.editAuthor(bookId, authorRequest.authorName).getOrThrow()
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok(
+            toApiBookAuthorSetModel(
+                bookService.editAuthor(bookId, authorRequest.authorName).getOrThrow()
+            )
+        )
     }
 
     /**

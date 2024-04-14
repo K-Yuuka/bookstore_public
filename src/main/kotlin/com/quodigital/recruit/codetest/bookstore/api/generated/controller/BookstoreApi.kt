@@ -34,9 +34,9 @@ interface BookstoreApi {
         tags = ["bookstore",],
         summary = "書籍の著者を変更",
         operationId = "bookstoreBookIdPut",
-        description = """書籍の著者を変更します""",
+        description = """書籍の著者を変更します。指定された著者が未登録の場合は登録します。""",
         responses = [
-            ApiResponse(responseCode = "201", description = "登録に成功", content = [Content(schema = Schema(implementation = BookAuthorSet::class))]),
+            ApiResponse(responseCode = "200", description = "取得成功", content = [Content(schema = Schema(implementation = BookAuthorSet::class))]),
             ApiResponse(responseCode = "400", description = "Bad request", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "404", description = "Not found", content = [Content(schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "409", description = "Conflict", content = [Content(schema = Schema(implementation = Error::class))]),

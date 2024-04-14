@@ -20,11 +20,8 @@ class AuthorApiImpl(
     /**
      * 著者を検索します
      */
-    override fun authorGet(authorName: String?): ResponseEntity<List<Author>> = ResponseEntity.ok(
-        toApiAuthorListModel(
-            bookStoreService.getAuthorByName(authorName).getOrThrow()
-        )
-    )
+    override fun authorGet(authorName: String?): ResponseEntity<List<Author>> =
+        ResponseEntity.ok(toApiAuthorListModel(bookStoreService.getAuthorListByName(authorName).getOrThrow()))
 
     /**
      * 著者名を編集します
