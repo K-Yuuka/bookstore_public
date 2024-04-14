@@ -1,104 +1,102 @@
-import org.gradle.api.plugins.internal.DefaultJavaPluginExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-	repositories {
-		maven {
-			url = uri("https://plugins.gradle.org/m2/")
-		}
-	}
+    repositories {
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
+    }
 
-	dependencies {
-		classpath("org.postgresql:postgresql:42.7.3")
-	}
+    dependencies {
+        classpath("org.postgresql:postgresql:42.7.3")
+    }
 }
 
 plugins {
-	id 'org.springframework.boot' version '3.2.4'
-	id 'io.spring.dependency-management' version '1.1.4'
-	id 'org.jetbrains.kotlin.jvm' version '1.9.23'
-	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.23'
-	id "org.jooq.jooq-codegen-gradle" version "3.19.6"
-	id "org.openapi.generator" version "7.4.0"
-	//id "org.postgresql" version "42.7.3"
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.23'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.23'
+    id "org.jooq.jooq-codegen-gradle" version "3.19.6"
+    id "org.openapi.generator" version "7.4.0"
+    //id "org.postgresql" version "42.7.3"
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '21'
+    sourceCompatibility = '21'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	//implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-jooq'
-	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.jetbrains.kotlin:kotlin-reflect'
-	implementation 'io.swagger.core.v3:swagger-annotations:2.2.21'
-	implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0-M2'
-	implementation 'org.jooq:jooq:3.19.6'
-	implementation 'org.jooq:jooq-meta:3.19.6'
-	jooqCodegen 'org.jooq:jooq:3.19.6'
-	jooqCodegen 'org.jooq:jooq-meta:3.19.6'
-	jooqCodegen 'org.jooq:jooq-codegen:3.19.6'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-	runtimeOnly 'org.postgresql:postgresql'
-	compileOnly 'org.projectlombok:lombok'
-	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0-M2'
-	compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
-	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
-	testImplementation 'org.jetbrains.kotlin:kotlin-test:2.0.0-RC1'
-	testImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0'
-	testImplementation 'org.springframework.security:spring-security-test:6.2.3'
-	testImplementation 'io.mockk:mockk:1.13.10'
-	testImplementation 'com.ninja-squad:springmockk:4.0.2'
-	testImplementation 'com.h2database:h2:2.2.220'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.21'
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0-M2'
+    implementation 'org.jooq:jooq:3.19.6'
+    implementation 'org.jooq:jooq-meta:3.19.6'
+    jooqCodegen 'org.jooq:jooq:3.19.6'
+    jooqCodegen 'org.jooq:jooq-meta:3.19.6'
+    jooqCodegen 'org.jooq:jooq-codegen:3.19.6'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    runtimeOnly 'org.postgresql:postgresql'
+    compileOnly 'org.projectlombok:lombok'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0-M2'
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test:2.0.0-RC1'
+    testImplementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0'
+    testImplementation 'org.springframework.security:spring-security-test:6.2.3'
+    testImplementation 'io.mockk:mockk:1.13.10'
+    testImplementation 'com.ninja-squad:springmockk:4.0.2'
+    testImplementation 'com.h2database:h2:2.2.220'
 }
 
 tasks.withType(KotlinCompile) {
-	kotlinOptions {
-		freeCompilerArgs += '-Xjsr305=strict'
-		jvmTarget = '21'
-	}
+    kotlinOptions {
+        freeCompilerArgs += '-Xjsr305=strict'
+        jvmTarget = '21'
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 jooq {
-	configuration {
-		jdbc {
-			driver = "org.postgresql.Driver"
-			url = "jdbc:postgresql://127.0.0.1:54797/postgres"
-			user = "postgres"
-			password = "passw0rd"
-		}
-		generator {
-			name = "org.jooq.codegen.KotlinGenerator"
-			database {
-				name = "org.jooq.meta.postgres.PostgresDatabase"
-				includes = ".*"
-				excludes = 'flyway_schema_history'
-				inputSchema = 'public'
-			}
-			strategy {
-				//name = 'org.jooq.codegen.DefaultGeneratorStrategy';
-				// A programmatic naming strategy implementation, referened by class name.
-					name = "com.example.AsInDatabaseStrategy"
-					java = """package com.example;
+    configuration {
+        jdbc {
+            driver = "org.postgresql.Driver"
+            url = "jdbc:postgresql://127.0.0.1:54797/postgres"
+            user = "postgres"
+            password = "passw0rd"
+        }
+        generator {
+            name = "org.jooq.codegen.KotlinGenerator"
+            database {
+                name = "org.jooq.meta.postgres.PostgresDatabase"
+                includes = ".*"
+                excludes = 'flyway_schema_history'
+                inputSchema = 'public'
+            }
+            strategy {
+                //name = 'org.jooq.codegen.DefaultGeneratorStrategy';
+                // A programmatic naming strategy implementation, referened by class name.
+                name = "com.example.AsInDatabaseStrategy"
+                java = """package com.example;
 import org.jooq.codegen.DefaultGeneratorStrategy;
 import org.jooq.meta.Definition;
 public class AsInDatabaseStrategy extends DefaultGeneratorStrategy {
@@ -107,41 +105,41 @@ public class AsInDatabaseStrategy extends DefaultGeneratorStrategy {
         return 'J' + super.getJavaClassName(definition, mode);
     }
 }"""
-			}
-			generate {
-				deprecated = false
-				kotlinSetterJvmNameAnnotationsOnIsPrefix = true
-				pojosAsKotlinDataClasses = true
-				immutablePojos = true
-				fluentSetters = true
-			}
-			target {
-				packageName = "com.quodigital.recruit.codetest.bookstore.db.generated"
-				directory = "./db/generated/src/main/kotlin"
-			}
-		}
-	}
+            }
+            generate {
+                deprecated = false
+                kotlinSetterJvmNameAnnotationsOnIsPrefix = true
+                pojosAsKotlinDataClasses = true
+                immutablePojos = true
+                fluentSetters = true
+            }
+            target {
+                packageName = "com.quodigital.recruit.codetest.bookstore.db.generated"
+                directory = "./db/generated/src/main/kotlin"
+            }
+        }
+    }
 }
 
 openApiGenerate {
-	generatorName = "kotlin-spring"
-	// 自動生成元となるopenapiの場所を指定しましょう。
-	inputSpec = "$rootDir/api/openapi.yml"
-	// 自動生成したソースの置き場を指定しましょう。
-	outputDir = "$rootDir/api/generated"
-	// 自動生成したControllerの配置位置を指定しましょう。
-	apiPackage = "com.quodigital.recruit.codetest.bookstore.api.generated.controller"
-	// 自動生成したModel(Request, Response等)の配置位置を指定しましょう。
-	modelPackage = "com.quodigital.recruit.codetest.bookstore.api.generated.model"
-	cleanupOutput = true
-	configOptions = [
-		interfaceOnly:"true",
-		useBeanValidation:"false",
-		exceptionHandler:"false"
-	]
+    generatorName = "kotlin-spring"
+    // 自動生成元となるopenapiの場所を指定しましょう。
+    inputSpec = "$rootDir/api/openapi.yml"
+    // 自動生成したソースの置き場を指定しましょう。
+    outputDir = "$rootDir/api/generated"
+    // 自動生成したControllerの配置位置を指定しましょう。
+    apiPackage = "com.quodigital.recruit.codetest.bookstore.api.generated.controller"
+    // 自動生成したModel(Request, Response等)の配置位置を指定しましょう。
+    modelPackage = "com.quodigital.recruit.codetest.bookstore.api.generated.model"
+    cleanupOutput = true
+    configOptions = [
+            interfaceOnly    : "true",
+            useBeanValidation: "false",
+            exceptionHandler : "false"
+    ]
 }
 
 test {
-	useJUnitPlatform()
-	jvmArgs("-XX:+EnableDynamicAgentLoading")
+    useJUnitPlatform()
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
 }
