@@ -52,70 +52,55 @@ class BookStoreServiceImpl(
         }
     }
 
-    override fun getBookListByName(bookName: String?): Result<List<BookInfo>> {
-        return kotlin.runCatching {
-            return@runCatching getByName(bookRepository, bookName).map { toBook(it) }.toList()
+    override fun getBookListByName(bookName: String?): List<BookInfo> =
+        getByName(bookRepository, bookName).map { toBook(it) }.toList()
+
+    override fun getBookListByAuthorName(authorName: String?): List<AuthorAndRelationalBooks> {
+        return if (authorName != null) {
+            toAuthorAndRelationalBooksList(bookAuthorRepository.getByAuthorName(authorName)
+                .ifEmpty { throw NotFoundException("No books by '$authorName' have been registered.") })
+        } else {
+            toAuthorAndRelationalBooksList(bookAuthorRepository.getAll())
         }
     }
 
-    override fun getBookListByAuthorName(authorName: String?): Result<List<AuthorAndRelationalBooks>> {
-        return kotlin.runCatching {
-            return@runCatching if (authorName != null) {
-                toAuthorAndRelationalBooksList(bookAuthorRepository.getByAuthorName(authorName)
-                    .ifEmpty { throw NotFoundException("No books by '$authorName' have been registered.") })
-            } else {
-                toAuthorAndRelationalBooksList(bookAuthorRepository.getAll())
-            }
-        }
-    }
 
-    override fun getAuthorListByName(authorName: String?): Result<List<AuthorInfo>> {
-        return kotlin.runCatching {
-            return@runCatching getByName(authorRepository, authorName).map { toAuthor(it) }.toList()
-        }
-    }
+    override fun getAuthorListByName(authorName: String?): List<AuthorInfo> =
+        getByName(authorRepository, authorName).map { toAuthor(it) }.toList()
 
-    override fun editBookName(bookId: Int, bookName: String): Result<Unit> = kotlin.runCatching {
+    override fun editBookName(bookId: Int, bookName: String): Unit =
         editName(bookRepository, bookId, bookName)
-    }
 
-    override fun editAuthorName(authorId: Int, authorName: String): Result<Unit> = kotlin.runCatching {
+    override fun editAuthorName(authorId: Int, authorName: String): Unit =
         editName(authorRepository, authorId, authorName)
-    }
 
-    override fun editAuthor(bookId: Int, authorName: String): Result<BookAuthorInfo> {
-        return kotlin.runCatching {
-            require(authorName.isNotBlank()) { "authorName does not allow blanks." }
-            val targetBook = bookRepository.getById(bookId)
-            check(targetBook != null) { "bookId='$bookId' does not exist." }
-            val author = authorRepository.addOrGetExistsInfo(authorName)
+    override fun editAuthor(bookId: Int, authorName: String): BookAuthorInfo {
+        require(authorName.isNotBlank()) { "authorName does not allow blanks." }
+        val targetBook = bookRepository.getById(bookId)
+            ?: throw NotFoundException("bookId='$bookId' does not exist.")
+        val author = authorRepository.addOrGetExistsInfo(authorName)
 
-            return@runCatching when {
-                bookAuthorRepository.exists(targetBook.bookName!!, authorName) -> {
-                    // 書籍と著者の組み合わせがすでに登録済みである場合はエラー
-                    throw ConflictException(
-                        "BookName='${targetBook.bookName}' and AuthorName='$authorName' have already registered."
-                    )
-                }
+        return when {
+            bookAuthorRepository.exists(targetBook.bookName!!, authorName) -> {
+                // 書籍と著者の組み合わせがすでに登録済みである場合はエラー
+                throw ConflictException(
+                    "BookName='${targetBook.bookName}' and AuthorName='$authorName' have already registered."
+                )
+            }
 
-                else -> {
-                    bookAuthorRepository.editAuthor(bookId, author.authorId!!)
-                    BookAuthorInfo(
-                        BookInfo(targetBook.bookId, targetBook.bookName),
-                        AuthorInfo(author.authorId, author.authorName)
-                    )
-                }
+            else -> {
+                bookAuthorRepository.editAuthor(bookId, author.authorId!!)
+                BookAuthorInfo(
+                    BookInfo(targetBook.bookId, targetBook.bookName),
+                    AuthorInfo(author.authorId, author.authorName)
+                )
             }
         }
     }
 
-    override fun deleteBook(bookId: Int): Result<Unit> = kotlin.runCatching {
-        delete(bookRepository, bookId)
-    }
+    override fun deleteBook(bookId: Int) = delete(bookRepository, bookId)
 
-    override fun deleteAuthor(authorId: Int): Result<Unit> = kotlin.runCatching {
-        delete(authorRepository, authorId)
-    }
+    override fun deleteAuthor(authorId: Int) = delete(authorRepository, authorId)
 
     private fun <T> getByName(repository: NameIdRepository<T>, name: String?): List<T> {
         return if (name.isNullOrBlank()) {
@@ -130,7 +115,7 @@ class BookStoreServiceImpl(
     private fun <T> editName(repository: NameIdRepository<T>, id: Int, name: String) {
         try {
             require(name.isNotBlank()) { "Name does not allow blanks." }
-            check(repository.exists(id)) { "Id='$id' does not exist." }
+            if (!repository.exists(id)) throw NotFoundException("Id='$id' does not exist.")
             repository.edit(id, name)
         } catch (ex: DataIntegrityViolationException) {
             throw ConflictException("Name = '$name' already exists.", ex)
@@ -138,7 +123,7 @@ class BookStoreServiceImpl(
     }
 
     private fun <T> delete(repository: NameIdRepository<T>, id: Int) {
-        check(repository.exists(id)) { "Id='$id' does not exist." }
+        if (!repository.exists(id)) throw NotFoundException("Id='$id' does not exist.")
         try {
             repository.delete(id)
         } catch (ex: DataIntegrityViolationException) {

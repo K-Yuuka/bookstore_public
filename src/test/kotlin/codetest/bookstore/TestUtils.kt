@@ -28,23 +28,23 @@ object TestUtils {
             AuthorInfo(it.authorId, it.authorName)
         }
     }
-//
-//    fun buildJAuthorJBookPairList(fileName: String): List<Pair<JAuthor, List<JBook>>> {
-//        return buildAuthorAndRelationalBooksList(fileName)
-//            .map {
-//                Pair(
-//                    JAuthor(it.author.authorId, it.author.authorName) ,
-//                    it.bookList.map { bookInfo ->  JBook(bookInfo.bookId, bookInfo.bookName)})
-//            }.toList()
-//    }
-//
-//    fun buildAuthorAndRelationalBooksList(fileName: String): List<AuthorAndRelationalBooks> {
-//        return buildAuthorBookPairList(fileName).map {
-//            AuthorAndRelationalBooks(
-//                AuthorInfo(it.first.authorId, it.first.authorName),
-//                it.second.map { jBook -> BookInfo(jBook.bookId, jBook.bookName) })
-//        }
-//    }
+
+    fun buildJAuthorJBookPairList(fileName: String): List<Pair<JAuthor, List<JBook>>> {
+        return buildAuthorAndRelationalBooksList(fileName)
+            .map {
+                Pair(
+                    JAuthor(it.author.authorId, it.author.authorName) ,
+                    it.bookList.map { bookInfo ->  JBook(bookInfo.bookId, bookInfo.bookName)})
+            }.toList()
+    }
+
+    fun buildAuthorAndRelationalBooksList(fileName: String): List<AuthorAndRelationalBooks> {
+        return buildAuthorBookPairList(fileName).map {
+            AuthorAndRelationalBooks(
+                AuthorInfo(it.first.authorId, it.first.authorName),
+                it.second.map { jBook -> BookInfo(jBook.bookId, jBook.bookName) })
+        }
+    }
 
     fun buildJBookList(fileName: String): List<JBook> {
         val mapper = jacksonObjectMapper()
@@ -56,12 +56,12 @@ object TestUtils {
         return mapper.readValue<List<JAuthor>>(getResourceFile(fileName).toFile())
     }
 
-//    fun buildAuthorBookPairList(fileName: String): List<Pair<JAuthor, List<JBook>>> {
-//        val mapper = jacksonObjectMapper()
-//        return mapper.readValue<List<BookStoreServiceImplTest.AuthorBookPair>>(
-//            getResourceFile(fileName).toFile()
-//        ).map { it.pair }
-//    }
+    fun buildAuthorBookPairList(fileName: String): List<Pair<JAuthor, List<JBook>>> {
+        val mapper = jacksonObjectMapper()
+        return mapper.readValue<List<AuthorBookPair>>(
+            getResourceFile(fileName).toFile()
+        ).map { it.pair }
+    }
 
     inline fun <reified T> jsonStringToObject(jsonString: String): T {
         val mapper = jacksonObjectMapper()

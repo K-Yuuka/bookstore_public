@@ -1,8 +1,10 @@
 package codetest.bookstore.api.handler
 
+import codetest.bookstore.api.exception.HttpBadParameterException
+import codetest.bookstore.api.exception.HttpConflictException
+import codetest.bookstore.api.exception.HttpNotFoundException
 import codetest.bookstore.api.generated.model.Error
 import codetest.bookstore.exception.ConflictException
-import codetest.bookstore.exception.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -17,8 +19,8 @@ class ExceptionHandler {
      * HTTP400
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = [IllegalArgumentException::class, IllegalStateException::class])
-    fun handleIllegalArgumentException(exception: RuntimeException): Error {
+    @ExceptionHandler(HttpBadParameterException::class)
+    fun handleHttpBadParameterException(exception: RuntimeException): Error {
         return buildError(exception)
     }
 
@@ -26,8 +28,8 @@ class ExceptionHandler {
      * HTTP404
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException::class)
-    fun handleNotFoundException(exception: RuntimeException): Error {
+    @ExceptionHandler(HttpNotFoundException::class)
+    fun handleHttpNotFoundException(exception: RuntimeException): Error {
         return buildError(exception)
     }
 
@@ -35,8 +37,8 @@ class ExceptionHandler {
      * HTTP409
      */
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ConflictException::class)
-    fun handleConflictException(exception: RuntimeException): Error {
+    @ExceptionHandler(HttpConflictException::class)
+    fun handleHttpConflictException(exception: RuntimeException): Error {
         return buildError(exception)
     }
 

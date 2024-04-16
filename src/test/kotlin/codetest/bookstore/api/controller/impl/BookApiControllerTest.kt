@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import kotlin.test.*
 
 @WebMvcTest
-class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
+class BookApiControllerTest(@Autowired val mockMvc: MockMvc) {
     @MockkBean
     private lateinit var bookStoreService: BookStoreService
 
@@ -29,12 +29,10 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun bookGet_successful_emptyName() {
-        every { bookStoreService.getBookListByName(null) } returns Result.success(
+        every { bookStoreService.getBookListByName(null) } returns
             TestUtils.buildBookList("BookRepositoryProvider_3.json")
-        )
-        every { bookStoreService.getBookListByName("name1") } returns Result.success(
+        every { bookStoreService.getBookListByName("name1") } returns
             TestUtils.buildBookList("BookRepositoryProvider_1.json")
-        )
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.get("/book"))
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -51,12 +49,10 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun bookGet_successful_specifyName() {
-        every { bookStoreService.getBookListByName(null) } returns Result.success(
+        every { bookStoreService.getBookListByName(null) } returns
             TestUtils.buildBookList("BookRepositoryProvider_3.json")
-        )
-        every { bookStoreService.getBookListByName("name1") } returns Result.success(
+        every { bookStoreService.getBookListByName("name1") } returns
             TestUtils.buildBookList("BookRepositoryProvider_1.json")
-        )
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.get("/book?bookName=name1"))
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -70,7 +66,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookGet_failure_notFound() {
         val exceptionMessage = "test exception"
-        every { bookStoreService.getBookListByName(any()) } returns Result.failure(NotFoundException(exceptionMessage))
+        every { bookStoreService.getBookListByName(any()) } throws NotFoundException(exceptionMessage)
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.get("/book?bookName=name1"))
             .andExpect(MockMvcResultMatchers.status().isNotFound)
@@ -81,7 +77,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookGet_failure_internalServerError() {
         val exceptionMessage = "test exception"
-        every { bookStoreService.getBookListByName(any()) } returns Result.failure(NullPointerException(exceptionMessage))
+        every { bookStoreService.getBookListByName(any()) } throws NullPointerException(exceptionMessage)
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.get("/book?bookName=name1"))
             .andExpect(MockMvcResultMatchers.status().isInternalServerError)
@@ -91,7 +87,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun bookPut_successful() {
-        every { bookStoreService.editBookName(any(), any()) } returns Result.success(Unit)
+        every { bookStoreService.editBookName(any(), any()) } returns Unit
         val requestJson = TestUtils.objectToJsonString(BookNameRequest("name1"))
         this.mockMvc
             .perform(
@@ -106,7 +102,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
     @ParameterizedTest
     @NullAndEmptySource
     fun bookPut_failure_badRequest(bookName: String?) {
-        every { bookStoreService.editBookName(any(), any()) } returns Result.success(Unit)
+        every { bookStoreService.editBookName(any(), any()) } returns Unit
         val requestJson = TestUtils.objectToJsonString(BookNameRequest(bookName))
         val result = this.mockMvc
             .perform(
@@ -122,11 +118,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookPut_failure_notFound() {
         val exceptionMessage = "test exception"
-        every { bookStoreService.editBookName(any(), any()) } returns Result.failure(
-            NotFoundException(
-                exceptionMessage
-            )
-        )
+        every { bookStoreService.editBookName(any(), any()) } throws NotFoundException(exceptionMessage)
         val requestJson = TestUtils.objectToJsonString(BookNameRequest("name1"))
         val result = this.mockMvc
             .perform(
@@ -142,11 +134,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookPut_failure_conflict() {
         val exceptionMessage = "test exception"
-        every { bookStoreService.editBookName(any(), any()) } returns Result.failure(
-            ConflictException(
-                exceptionMessage
-            )
-        )
+        every { bookStoreService.editBookName(any(), any()) } throws ConflictException(exceptionMessage)
         val requestJson = TestUtils.objectToJsonString(BookNameRequest("name1"))
         val result = this.mockMvc
             .perform(
@@ -162,11 +150,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookPut_failure_internalServerError() {
         val exceptionMessage = "test exception"
-        every { bookStoreService.editBookName(any(), any()) } returns Result.failure(
-            NullPointerException(
-                exceptionMessage
-            )
-        )
+        every { bookStoreService.editBookName(any(), any()) } throws NullPointerException(exceptionMessage)
         val requestJson = TestUtils.objectToJsonString(BookNameRequest("name1"))
         val result = this.mockMvc
             .perform(
@@ -181,7 +165,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun bookDelete_successful() {
-        every { bookStoreService.deleteBook(any()) } returns Result.success(Unit)
+        every { bookStoreService.deleteBook(any()) } returns Unit
         this.mockMvc
             .perform(MockMvcRequestBuilders.delete("/book/1"))
             .andExpect(MockMvcResultMatchers.status().isNoContent)
@@ -191,7 +175,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookDelete_failure_notFound() {
         val exceptionMessage = "test exception"
-        every { bookStoreService.deleteBook(any()) } returns Result.failure(NotFoundException(exceptionMessage))
+        every { bookStoreService.deleteBook(any()) } throws NotFoundException(exceptionMessage)
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.delete("/book/1"))
             .andExpect(MockMvcResultMatchers.status().isNotFound)
@@ -202,7 +186,7 @@ class BookApiImplTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookDelete_failure_internalServerError() {
         val exceptionMessage = "test exception"
-        every { bookStoreService.deleteBook(any()) } returns Result.failure(NullPointerException(exceptionMessage))
+        every { bookStoreService.deleteBook(any()) } throws NullPointerException(exceptionMessage)
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.delete("/book/1"))
             .andExpect(MockMvcResultMatchers.status().isInternalServerError)

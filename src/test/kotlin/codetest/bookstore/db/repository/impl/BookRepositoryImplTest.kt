@@ -36,8 +36,8 @@ class BookRepositoryImplTest {
 
     @ParameterizedTest
     @CsvSource(value = [
-        "%Name%, %",
-        "_Name_, _"
+        "%BookName%, %BookName",
+        "_BookName_, _BookName"
     ])
     fun getByName_successful_needsEscape(targetValue:String, specifyName:String) {
         repository.add(targetValue)

@@ -13,7 +13,6 @@ import org.springframework.test.context.TestPropertySource
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 @SpringBootTest
 @TestPropertySource(locations = ["classpath:test.properties"])
@@ -41,8 +40,39 @@ class BookStoreServiceTransactionTest {
         val bookName = "addBookAndAuthor_failure_addAuthor"
         val authorName = "addBookAndAuthor_failure_addAuthor"
 
-        service.editAuthor(1, authorName).onFailure {
+        runCatching {
+            service.addBookAndAuthor(bookName, authorName)
+        }.onFailure {
             assertTrue(authorRepository.getByName(authorName).isEmpty())
         }
     }
+
+    @Test
+    fun addBookAndAuthor_failure_addBookAuthor() {
+        every { bookAuthorRepository.add(any(), any()) } throws DataIntegrityViolationException("")
+
+        val bookName = "addBookAndAuthor_failure_addBookAuthor"
+        val authorName = "addBookAndAuthor_failure_addBookAuthor"
+
+        runCatching {
+            service.addBookAndAuthor(bookName, authorName)
+        }.onFailure {
+            assertTrue(authorRepository.getByName(authorName).isEmpty())
+            assertTrue(bookRepository.getByName(bookName).isEmpty())
+        }
+    }
+
+    @Test
+    fun editAuthor_failure_editAuthor() {
+        every { bookAuthorRepository.editAuthor(any(), any()) } throws DataIntegrityViolationException("")
+
+        val authorName = "addBookAndAuthor_failure_addBookAuthor"
+
+        runCatching {
+            service.editAuthor(1, authorName)
+        }.onFailure {
+            assertTrue(authorRepository.getByName(authorName).isEmpty())
+        }
+    }
+
 }

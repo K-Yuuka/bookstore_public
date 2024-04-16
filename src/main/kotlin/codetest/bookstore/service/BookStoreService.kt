@@ -19,40 +19,40 @@ interface BookStoreService {
     /**
      * [bookName]で書籍を検索する。nullの場合は登録されている書籍すべてを取得する
      */
-    fun getBookListByName(bookName: String?): Result<List<BookInfo>>
+    fun getBookListByName(bookName: String?): List<BookInfo>
 
     /**
      *  [authorName]で書籍を検索する。nullの場合は登録されている書籍&著者すべてを取得する
      */
-    fun getBookListByAuthorName(authorName: String?): Result<List<AuthorAndRelationalBooks>>
+    fun getBookListByAuthorName(authorName: String?): List<AuthorAndRelationalBooks>
 
     /**
      * [authorName]で著者を検索する。nullの場合は登録されている書籍すべてを取得する
      */
-    fun getAuthorListByName(authorName: String?): Result<List<AuthorInfo>>
+    fun getAuthorListByName(authorName: String?): List<AuthorInfo>
 
     /**
      * [bookId]で指定された書籍の名前を[bookName]に変更する
      */
-    fun editBookName(bookId: Int, bookName: String) : Result<Unit>
+    fun editBookName(bookId: Int, bookName: String) : Unit
 
     /**
      * [authorId]で指定された著者の名前を[authorName]に変更する
      */
-    fun editAuthorName(authorId: Int, authorName: String) : Result<Unit>
+    fun editAuthorName(authorId: Int, authorName: String) : Unit
 
     /**
      * [bookId]で指定された書籍の著者を[authorName]に変更する
      */
-    fun editAuthor(bookId: Int, authorName: String): Result<BookAuthorInfo>
+    fun editAuthor(bookId: Int, authorName: String): BookAuthorInfo
 
     /**
      * [bookId]で指定された書籍を削除する
      */
-    fun deleteBook(bookId: Int) : Result<Unit>
+    fun deleteBook(bookId: Int) : Unit
 
     /**
      * [authorId]で指定された著者を削除する
      */
-    fun deleteAuthor(authorId: Int) : Result<Unit>
+    fun deleteAuthor(authorId: Int) : Unit
 }

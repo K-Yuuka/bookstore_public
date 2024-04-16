@@ -33,8 +33,8 @@ class AuthorRepositoryImplTest {
 
     @ParameterizedTest
     @CsvSource(value = [
-        "%Name%, %",
-        "_Name_, _"
+        "%AuthorName%, %AuthorName",
+        "_AuthorName_, _AuthorName"
     ])
     fun getByName_successful_needsEscape(targetValue:String, specifyName:String) {
         repository.add(targetValue)

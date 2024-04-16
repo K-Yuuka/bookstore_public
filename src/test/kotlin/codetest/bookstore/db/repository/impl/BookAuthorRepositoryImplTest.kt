@@ -91,8 +91,8 @@ class BookAuthorRepositoryImplTest {
 
     @ParameterizedTest
     @CsvSource(value = [
-        "%Name%, %",
-        "_Name_, _"
+        "%BookAuthorName%, %BookAuthorName",
+        "_BookAuthorName_, _BookAuthorName"
     ])
     fun getByAuthorName_successful_needsEscape(targetValue:String, specifyName:String) {
         val addedAuthor = authorRepository.add(targetValue)
