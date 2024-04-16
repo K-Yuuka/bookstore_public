@@ -114,7 +114,7 @@ public class AsInDatabaseStrategy extends DefaultGeneratorStrategy {
                 fluentSetters = true
             }
             target {
-                packageName = "com.quodigital.recruit.codetest.bookstore.db.generated"
+                packageName = "codetest.bookstore.db.generated"
                 directory = "./db/generated/src/main/kotlin"
             }
         }
@@ -128,9 +128,9 @@ openApiGenerate {
     // 自動生成したソースの置き場を指定しましょう。
     outputDir = "$rootDir/api/generated"
     // 自動生成したControllerの配置位置を指定しましょう。
-    apiPackage = "com.quodigital.recruit.codetest.bookstore.api.generated.controller"
+    apiPackage = "codetest.bookstore.api.generated.controller"
     // 自動生成したModel(Request, Response等)の配置位置を指定しましょう。
-    modelPackage = "com.quodigital.recruit.codetest.bookstore.api.generated.model"
+    modelPackage = "codetest.bookstore.api.generated.model"
     cleanupOutput = true
     configOptions = [
             interfaceOnly    : "true",
