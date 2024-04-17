@@ -4,8 +4,6 @@
 package codetest.bookstore.db.generated
 
 
-import kotlin.collections.List
-
 import org.jooq.Constants
 import org.jooq.Schema
 import org.jooq.impl.CatalogImpl
@@ -21,7 +19,7 @@ open class DefaultCatalog : CatalogImpl("") {
         /**
          * The reference instance of <code>DEFAULT_CATALOG</code>
          */
-        public val DEFAULT_CATALOG: DefaultCatalog = DefaultCatalog()
+        val DEFAULT_CATALOG: DefaultCatalog = DefaultCatalog()
     }
 
     /**

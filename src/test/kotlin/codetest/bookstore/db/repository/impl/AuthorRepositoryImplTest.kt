@@ -3,7 +3,6 @@ package codetest.bookstore.db.repository.impl
 import codetest.bookstore.db.repository.AuthorRepository
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DataIntegrityViolationException
@@ -32,11 +31,13 @@ class AuthorRepositoryImplTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = [
-        "%AuthorName%, %AuthorName",
-        "_AuthorName_, _AuthorName"
-    ])
-    fun getByName_successful_needsEscape(targetValue:String, specifyName:String) {
+    @CsvSource(
+        value = [
+            "%AuthorName%, %AuthorName",
+            "_AuthorName_, _AuthorName"
+        ]
+    )
+    fun getByName_successful_needsEscape(targetValue: String, specifyName: String) {
         repository.add(targetValue)
 
         val actual = repository.getByName(specifyName)
@@ -70,7 +71,7 @@ class AuthorRepositoryImplTest {
     @Test
     fun add_successful() {
         val expectedName = "山田太郎"
-        val actual = repository.add(expectedName)
+        val actual = repository.add(expectedName) ?: fail()
         assertEquals(expectedName, actual.authorName)
         assertNotNull(actual.authorId)
     }
@@ -84,7 +85,7 @@ class AuthorRepositoryImplTest {
     fun addOrGetExistsInfo_successful_addNew() {
         val beforeSize = repository.getAll().size
         val expectedName = "田中太郎"
-        val actual = repository.addOrGetExistsInfo(expectedName)
+        val actual = repository.addOrGetExistsInfo(expectedName) ?: fail()
         assertEquals(expectedName, actual.authorName)
         assertNotNull(actual.authorId)
         assertEquals(beforeSize + 1, repository.getAll().size)
@@ -94,7 +95,7 @@ class AuthorRepositoryImplTest {
     fun addOrGetExistsInfo_successful_exists() {
         val beforeSize = repository.getAll().size
         val expectedName = "黒柳徹子"
-        val actual = repository.addOrGetExistsInfo(expectedName)
+        val actual = repository.addOrGetExistsInfo(expectedName) ?: fail()
         assertEquals(expectedName, actual.authorName)
         assertNotNull(actual.authorId)
         assertEquals(beforeSize, repository.getAll().size)
@@ -102,7 +103,7 @@ class AuthorRepositoryImplTest {
 
     @Test
     fun edit_successful() {
-        val targetAuthor = repository.add("この著者を編集します")
+        val targetAuthor = repository.add("この著者を編集します") ?: fail()
         val expectedName = "山田花子"
         assertTrue(repository.edit(targetAuthor.authorId!!, expectedName))
 
@@ -118,7 +119,7 @@ class AuthorRepositoryImplTest {
 
     @Test
     fun delete_successful() {
-        val targetAuthor = repository.add("田中花子")
+        val targetAuthor = repository.add("田中花子") ?: fail()
         assertTrue(repository.delete(targetAuthor.authorId!!))
         assertNull(repository.getById(targetAuthor.authorId!!))
     }

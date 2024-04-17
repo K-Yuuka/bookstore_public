@@ -1,5 +1,14 @@
 [
-  {"authorId": 1, "authorName": "name1"},
-  {"authorId": 2, "authorName": "name2"},
-  {"authorId": 3, "authorName": "name3"}
+  {
+    "authorId": 1,
+    "authorName": "name1"
+  },
+  {
+    "authorId": 2,
+    "authorName": "name2"
+  },
+  {
+    "authorId": 3,
+    "authorName": "name3"
+  }
 ]

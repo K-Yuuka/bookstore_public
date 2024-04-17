@@ -1,6 +1,5 @@
 package codetest.bookstore.api.controller.impl
 
-import com.ninjasquad.springmockk.MockkBean
 import codetest.bookstore.TestUtils
 import codetest.bookstore.api.generated.model.*
 import codetest.bookstore.exception.ConflictException
@@ -9,6 +8,7 @@ import codetest.bookstore.model.AuthorInfo
 import codetest.bookstore.model.BookAuthorInfo
 import codetest.bookstore.model.BookInfo
 import codetest.bookstore.service.BookStoreService
+import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
@@ -110,7 +110,7 @@ class BookstoreControllerTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookstorePost_failure_conflict() {
         val exceptionMessage = "test exception"
-        every { bookStoreService.addBookAndAuthor(any(), any()) } throws ConflictException( exceptionMessage)
+        every { bookStoreService.addBookAndAuthor(any(), any()) } throws ConflictException(exceptionMessage)
 
         val result = this.mockMvc
             .perform(
@@ -156,9 +156,9 @@ class BookstoreControllerTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookstoreGet_successful_emptyName() {
         every { bookStoreService.getBookListByAuthorName(null) } returns
-            TestUtils.buildAuthorAndRelationalBooksList("BookAuthorRepositoryProvider_3.json")
+                TestUtils.buildAuthorAndRelationalBooksList("BookAuthorRepositoryProvider_3.json")
         every { bookStoreService.getBookListByAuthorName("name1") } returns
-            TestUtils.buildAuthorAndRelationalBooksList("BookAuthorRepositoryProvider_1.json")
+                TestUtils.buildAuthorAndRelationalBooksList("BookAuthorRepositoryProvider_1.json")
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.get("/bookstore"))
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -197,9 +197,9 @@ class BookstoreControllerTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookstoreGet_successful_specifyName() {
         every { bookStoreService.getBookListByAuthorName(null) } returns
-            TestUtils.buildAuthorAndRelationalBooksList("BookAuthorRepositoryProvider_3.json")
+                TestUtils.buildAuthorAndRelationalBooksList("BookAuthorRepositoryProvider_3.json")
         every { bookStoreService.getBookListByAuthorName("name1") } returns
-            TestUtils.buildAuthorAndRelationalBooksList("BookAuthorRepositoryProvider_1.json")
+                TestUtils.buildAuthorAndRelationalBooksList("BookAuthorRepositoryProvider_1.json")
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.get("/bookstore?authorName=name1"))
             .andExpect(MockMvcResultMatchers.status().isOk)

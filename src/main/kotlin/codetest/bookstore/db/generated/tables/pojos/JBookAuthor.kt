@@ -14,7 +14,7 @@ import java.io.Serializable
 data class JBookAuthor(
     val bookId: Int? = null,
     val authorId: Int? = null
-): Serializable {
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other)
@@ -27,14 +27,12 @@ data class JBookAuthor(
         if (this.bookId == null) {
             if (o.bookId != null)
                 return false
-        }
-        else if (this.bookId != o.bookId)
+        } else if (this.bookId != o.bookId)
             return false
         if (this.authorId == null) {
             if (o.authorId != null)
                 return false
-        }
-        else if (this.authorId != o.authorId)
+        } else if (this.authorId != o.authorId)
             return false
         return true
     }

@@ -1,13 +1,12 @@
 package codetest.bookstore
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import codetest.bookstore.db.generated.tables.pojos.JAuthor
 import codetest.bookstore.db.generated.tables.pojos.JBook
 import codetest.bookstore.model.AuthorAndRelationalBooks
 import codetest.bookstore.model.AuthorInfo
 import codetest.bookstore.model.BookInfo
-import codetest.bookstore.service.impl.BookStoreServiceImplTest
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.nio.file.Path
 import java.nio.file.Paths
 
@@ -33,8 +32,8 @@ object TestUtils {
         return buildAuthorAndRelationalBooksList(fileName)
             .map {
                 Pair(
-                    JAuthor(it.author.authorId, it.author.authorName) ,
-                    it.bookList.map { bookInfo ->  JBook(bookInfo.bookId, bookInfo.bookName)})
+                    JAuthor(it.author.authorId, it.author.authorName),
+                    it.bookList.map { bookInfo -> JBook(bookInfo.bookId, bookInfo.bookName) })
             }.toList()
     }
 

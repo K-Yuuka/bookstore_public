@@ -90,13 +90,15 @@ class BookAuthorRepositoryImplTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = [
-        "%BookAuthorName%, %BookAuthorName",
-        "_BookAuthorName_, _BookAuthorName"
-    ])
-    fun getByAuthorName_successful_needsEscape(targetValue:String, specifyName:String) {
-        val addedAuthor = authorRepository.add(targetValue)
-        val addedBook = bookRepository.add(targetValue)
+    @CsvSource(
+        value = [
+            "%BookAuthorName%, %BookAuthorName",
+            "_BookAuthorName_, _BookAuthorName"
+        ]
+    )
+    fun getByAuthorName_successful_needsEscape(targetValue: String, specifyName: String) {
+        val addedAuthor = authorRepository.add(targetValue) ?: fail()
+        val addedBook = bookRepository.add(targetValue) ?: fail()
         repository.add(addedBook.bookId!!, addedAuthor.authorId!!)
 
         val actual = repository.getByAuthorName(specifyName)
@@ -115,9 +117,9 @@ class BookAuthorRepositoryImplTest {
 
     @Test
     fun add_successful() {
-        val addedBook = bookRepository.add("book1")
-        val addedAuthor = authorRepository.add("name1")
-        val actual = repository.add(addedBook.bookId!!, addedAuthor.authorId!!)
+        val addedBook = bookRepository.add("book1") ?: fail()
+        val addedAuthor = authorRepository.add("name1") ?: fail()
+        val actual = repository.add(addedBook.bookId!!, addedAuthor.authorId!!) ?: fail()
         assertEquals(addedBook.bookId, actual.bookId)
         assertEquals(addedAuthor.authorId, actual.authorId)
     }
@@ -132,21 +134,22 @@ class BookAuthorRepositoryImplTest {
             )
         }
     }
+
     @Test
     fun editAuthor_successful() {
-        val addedBook = bookRepository.add("editAuthor_successful_book")
-        val addedAuthor = authorRepository.add("editAuthor_successful_name")
+        val addedBook = bookRepository.add("editAuthor_successful_book") ?: fail()
+        val addedAuthor = authorRepository.add("editAuthor_successful_name") ?: fail()
         repository.add(addedBook.bookId!!, addedAuthor.authorId!!)
 
-        val newAuthor = authorRepository.add("editAuthor_successful_name2")
+        val newAuthor = authorRepository.add("editAuthor_successful_name2") ?: fail()
         assertTrue(repository.editAuthor(addedBook.bookId!!, newAuthor.authorId!!))
         assertEquals(newAuthor.authorName, repository.getByAuthorName(newAuthor.authorName!!)[0].first.authorName)
     }
 
     @Test
     fun editAuthor_failure_notFound_bookId() {
-        val addedBook = bookRepository.add("editAuthor_failure_notFound_bookId_name")
-        val addedAuthor = authorRepository.add("editAuthor_failure_notFound_bookId_name")
+        val addedBook = bookRepository.add("editAuthor_failure_notFound_bookId_name") ?: fail()
+        val addedAuthor = authorRepository.add("editAuthor_failure_notFound_bookId_name") ?: fail()
         repository.add(addedBook.bookId!!, addedAuthor.authorId!!)
 
         assertFalse(repository.editAuthor(99, addedAuthor.authorId!!))
@@ -154,9 +157,9 @@ class BookAuthorRepositoryImplTest {
 
     @Test
     fun editAuthor_failure_notFound_authorId() {
-        val addedBook = bookRepository.add("editAuthor_failure_notFound_authorId_name")
-        val addedAuthor = authorRepository.add("editAuthor_failure_notFound_authorId_name")
+        val addedBook = bookRepository.add("editAuthor_failure_notFound_authorId_name") ?: fail()
+        val addedAuthor = authorRepository.add("editAuthor_failure_notFound_authorId_name") ?: fail()
         repository.add(addedBook.bookId!!, addedAuthor.authorId!!)
-        assertFailsWith<DataIntegrityViolationException> {  repository.editAuthor(addedBook.bookId!!, 99)}
+        assertFailsWith<DataIntegrityViolationException> { repository.editAuthor(addedBook.bookId!!, 99) }
     }
 }

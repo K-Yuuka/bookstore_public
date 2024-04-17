@@ -11,7 +11,7 @@ interface NameIdRepository<TRecordData> {
     fun getAll(): List<TRecordData>
 
     /*** [name]を登録して、登録情報を返す */
-    fun add(name: String): TRecordData
+    fun add(name: String): TRecordData?
 
     /*** [id]の書籍の名前を[name]に変更する。変更できた場合はtrueを返す。 */
     fun edit(id: Int, name: String): Boolean

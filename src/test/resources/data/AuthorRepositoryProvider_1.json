@@ -1,3 +1,6 @@
 [
-  {"authorId": 1, "authorName": "name1"}
+  {
+    "authorId": 1,
+    "authorName": "name1"
+  }
 ]

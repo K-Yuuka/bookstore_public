@@ -1,6 +1,5 @@
 package codetest.bookstore.api.controller.impl
 
-import com.ninjasquad.springmockk.MockkBean
 import codetest.bookstore.TestUtils
 import codetest.bookstore.api.generated.model.Book
 import codetest.bookstore.api.generated.model.BookNameRequest
@@ -8,6 +7,7 @@ import codetest.bookstore.api.generated.model.Error
 import codetest.bookstore.exception.ConflictException
 import codetest.bookstore.exception.NotFoundException
 import codetest.bookstore.service.BookStoreService
+import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.NullAndEmptySource
@@ -16,7 +16,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 @WebMvcTest
 class BookApiControllerTest(@Autowired val mockMvc: MockMvc) {
@@ -30,9 +33,9 @@ class BookApiControllerTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookGet_successful_emptyName() {
         every { bookStoreService.getBookListByName(null) } returns
-            TestUtils.buildBookList("BookRepositoryProvider_3.json")
+                TestUtils.buildBookList("BookRepositoryProvider_3.json")
         every { bookStoreService.getBookListByName("name1") } returns
-            TestUtils.buildBookList("BookRepositoryProvider_1.json")
+                TestUtils.buildBookList("BookRepositoryProvider_1.json")
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.get("/book"))
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -50,9 +53,9 @@ class BookApiControllerTest(@Autowired val mockMvc: MockMvc) {
     @Test
     fun bookGet_successful_specifyName() {
         every { bookStoreService.getBookListByName(null) } returns
-            TestUtils.buildBookList("BookRepositoryProvider_3.json")
+                TestUtils.buildBookList("BookRepositoryProvider_3.json")
         every { bookStoreService.getBookListByName("name1") } returns
-            TestUtils.buildBookList("BookRepositoryProvider_1.json")
+                TestUtils.buildBookList("BookRepositoryProvider_1.json")
         val result = this.mockMvc
             .perform(MockMvcRequestBuilders.get("/book?bookName=name1"))
             .andExpect(MockMvcResultMatchers.status().isOk)

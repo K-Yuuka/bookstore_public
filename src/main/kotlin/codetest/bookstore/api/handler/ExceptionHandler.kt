@@ -4,7 +4,6 @@ import codetest.bookstore.api.exception.HttpBadParameterException
 import codetest.bookstore.api.exception.HttpConflictException
 import codetest.bookstore.api.exception.HttpNotFoundException
 import codetest.bookstore.api.generated.model.Error
-import codetest.bookstore.exception.ConflictException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus

@@ -35,11 +35,13 @@ class BookRepositoryImplTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = [
-        "%BookName%, %BookName",
-        "_BookName_, _BookName"
-    ])
-    fun getByName_successful_needsEscape(targetValue:String, specifyName:String) {
+    @CsvSource(
+        value = [
+            "%BookName%, %BookName",
+            "_BookName_, _BookName"
+        ]
+    )
+    fun getByName_successful_needsEscape(targetValue: String, specifyName: String) {
         repository.add(targetValue)
 
         val actual = repository.getByName(specifyName)
@@ -80,7 +82,7 @@ class BookRepositoryImplTest {
     @Test
     fun add_successful() {
         val expectedName = "本1"
-        val actual = repository.add(expectedName)
+        val actual = repository.add(expectedName) ?: fail()
         assertEquals(expectedName, actual.bookName)
         assertNotNull(actual.bookId)
     }
@@ -88,14 +90,14 @@ class BookRepositoryImplTest {
     @Test
     fun add_successful_sameName() {
         val expectedName = "こころ"
-        val actual = repository.add(expectedName)
+        val actual = repository.add(expectedName) ?: fail()
         assertEquals(expectedName, actual.bookName)
         assertNotNull(actual.bookId)
     }
 
     @Test
     fun edit_successful() {
-        val targetBook = repository.add("この本を編集します")
+        val targetBook = repository.add("この本を編集します") ?: fail()
         val expectedName = "本2"
         assertTrue(repository.edit(targetBook.bookId!!, expectedName))
 
@@ -111,7 +113,7 @@ class BookRepositoryImplTest {
 
     @Test
     fun delete_successful() {
-        val targetAuthor = repository.add("本3")
+        val targetAuthor = repository.add("本3") ?: fail()
         assertTrue(repository.delete(targetAuthor.bookId!!))
         assertNull(repository.getById(targetAuthor.bookId!!))
     }
@@ -123,7 +125,7 @@ class BookRepositoryImplTest {
 
     @Test
     fun delete_successful_relationalAuthor() {
-        val targetBook = repository.add("本4")
+        val targetBook = repository.add("本4") ?: fail()
         bookAuthorRepository.add(targetBook.bookId!!, 1)
         assertTrue(repository.delete(targetBook.bookId!!))
     }

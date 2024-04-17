@@ -7,9 +7,6 @@ package codetest.bookstore.db.generated
 import codetest.bookstore.db.generated.tables.JAuthor
 import codetest.bookstore.db.generated.tables.JBook
 import codetest.bookstore.db.generated.tables.JBookAuthor
-
-import kotlin.collections.List
-
 import org.jooq.Catalog
 import org.jooq.Table
 import org.jooq.impl.SchemaImpl
@@ -20,7 +17,7 @@ import org.jooq.impl.SchemaImpl
  */
 @Suppress("UNCHECKED_CAST")
 open class JPublic : SchemaImpl("public", DefaultCatalog.DEFAULT_CATALOG) {
-    public companion object {
+    companion object {
 
         /**
          * The reference instance of <code>public</code>

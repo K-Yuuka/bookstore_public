@@ -33,13 +33,13 @@ class BookRepositoryImpl(
         return get(null)
     }
 
-    override fun add(name: String): JBook {
+    override fun add(name: String): JBook? {
         return dslContext
             .insertInto(BOOK, BOOK.BOOK_NAME)
             .values(name)
             .returningResult(BOOK.BOOK_ID, BOOK.BOOK_NAME)
             .fetchOne()
-            ?.into(JBook::class.java)!!
+            ?.into(JBook::class.java)
     }
 
     override fun edit(id: Int, name: String): Boolean {
