@@ -1,9 +1,8 @@
 package codetest.bookstore.api.generated.controller
 
 import org.springframework.web.context.request.NativeWebRequest
-
-import javax.servlet.http.HttpServletResponse
 import java.io.IOException
+import javax.servlet.http.HttpServletResponse
 
 object ApiUtil {
     fun setExampleResponse(req: NativeWebRequest, contentType: String, example: String) {

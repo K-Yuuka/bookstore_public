@@ -9,6 +9,7 @@ import codetest.bookstore.db.repository.BookAuthorRepository
 import codetest.bookstore.db.repository.BookRepository
 import codetest.bookstore.exception.ConflictException
 import codetest.bookstore.exception.NotFoundException
+import codetest.bookstore.exception.UnexpectedException
 import codetest.bookstore.service.BookStoreService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -59,6 +60,66 @@ class BookStoreServiceImplTest {
             assertEquals(expectedAuthor.authorName, actual.authorInfo.authorName)
         } catch (e: Exception) {
             fail("Exception occurred.", e)
+        }
+    }
+
+    @Test
+    fun addBookAndAuthor_failure_bookAddReturnNull() {
+        val expectedBook = JBook(bookId = 1, bookName = "book1")
+        val expectedAuthor = JAuthor(authorId = 2, authorName = "author2")
+        every { bookAuthorRepository.exists(any(), any()) } returns false
+        every { bookRepository.add(any()) } returns null
+        every { authorRepository.addOrGetExistsInfo(any()) } returns expectedAuthor
+        every { bookAuthorRepository.add(any(), any()) } returns JBookAuthor(
+            expectedBook.bookId,
+            expectedAuthor.authorId
+        )
+
+        runCatching {
+            service.addBookAndAuthor("book", "author")
+        }.onSuccess {
+            fail("No exception")
+        }.onFailure {
+            assertTrue(it is UnexpectedException)
+        }
+    }
+
+    @Test
+    fun addBookAndAuthor_failure_authorAddReturnNull() {
+        val expectedBook = JBook(bookId = 1, bookName = "book1")
+        val expectedAuthor = JAuthor(authorId = 2, authorName = "author2")
+        every { bookAuthorRepository.exists(any(), any()) } returns false
+        every { bookRepository.add(any()) } returns expectedBook
+        every { authorRepository.addOrGetExistsInfo(any()) } returns null
+        every { bookAuthorRepository.add(any(), any()) } returns JBookAuthor(
+            expectedBook.bookId,
+            expectedAuthor.authorId
+        )
+
+        runCatching {
+            service.addBookAndAuthor("book", "author")
+        }.onSuccess {
+            fail("No exception")
+        }.onFailure {
+            assertTrue(it is UnexpectedException)
+        }
+    }
+
+    @Test
+    fun addBookAndAuthor_failure_bookAndAuthorAddReturnNull() {
+        val expectedBook = JBook(bookId = 1, bookName = "book1")
+        val expectedAuthor = JAuthor(authorId = 2, authorName = "author2")
+        every { bookAuthorRepository.exists(any(), any()) } returns false
+        every { bookRepository.add(any()) } returns expectedBook
+        every { authorRepository.addOrGetExistsInfo(any()) } returns expectedAuthor
+        every { bookAuthorRepository.add(any(), any()) } returns null
+
+        runCatching {
+            service.addBookAndAuthor("book", "author")
+        }.onSuccess {
+            fail("No exception")
+        }.onFailure {
+            assertTrue(it is UnexpectedException)
         }
     }
 
@@ -432,6 +493,23 @@ class BookStoreServiceImplTest {
             fail("No exception")
         }.onFailure {
             assertTrue(it is ConflictException)
+        }
+    }
+
+    @Test
+    fun editAuthor_failure_addAuthorReturnNull() {
+        val expectedBook = JBook(1, "book1")
+        val expectedAuthor = JAuthor(2, "author1")
+        every { bookRepository.getById(any()) } returns expectedBook
+        every { authorRepository.addOrGetExistsInfo(any()) } returns null
+        every { bookAuthorRepository.exists(any(), any()) } returns true
+
+        runCatching {
+            service.editAuthor(1, "author1")
+        }.onSuccess {
+            fail("No exception")
+        }.onFailure {
+            assertTrue(it is UnexpectedException)
         }
     }
 

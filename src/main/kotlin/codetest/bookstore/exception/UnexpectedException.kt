@@ -1,8 +1,8 @@
 package codetest.bookstore.exception
 
 /**
- * 対象の情報が見つからない場合の例外
+ * 予期せぬ例外
  */
-class NotFoundException(
+class UnexpectedException(
     override val message: String?
 ) : RuntimeException(message)

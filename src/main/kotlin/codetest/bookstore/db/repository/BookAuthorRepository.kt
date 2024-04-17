@@ -3,9 +3,6 @@ package codetest.bookstore.db.repository
 import codetest.bookstore.db.generated.tables.pojos.JAuthor
 import codetest.bookstore.db.generated.tables.pojos.JBook
 import codetest.bookstore.db.generated.tables.pojos.JBookAuthor
-import codetest.bookstore.db.generated.tables.records.JAuthorRecord
-import codetest.bookstore.db.generated.tables.records.JBookRecord
-import org.jooq.Result
 
 /**
  * 書籍&著者のレポジトリ
@@ -29,10 +26,10 @@ interface BookAuthorRepository {
     /**
      * [bookId]と[authorId]の関連を登録して、登録情報を返す
      */
-    fun add(bookId: Int, authorId: Int): JBookAuthor
+    fun add(bookId: Int, authorId: Int): JBookAuthor?
 
     /**
      * [bookId]で指定された書籍の著者を[authorId]に変更する
      */
-    fun editAuthor(bookId: Int, authorId: Int) : Boolean
+    fun editAuthor(bookId: Int, authorId: Int): Boolean
 }

@@ -31,16 +31,16 @@ class AuthorRepositoryImpl(
         return get(null)
     }
 
-    override fun add(name: String): JAuthor {
+    override fun add(name: String): JAuthor? {
         return dslContext
             .insertInto(AUTHOR, AUTHOR.AUTHOR_NAME)
             .values(name)
             .returningResult(AUTHOR.AUTHOR_ID, AUTHOR.AUTHOR_NAME)
             .fetchOne()
-            ?.into(JAuthor::class.java)!!
+            ?.into(JAuthor::class.java)
     }
 
-    override fun addOrGetExistsInfo(authorName: String): JAuthor {
+    override fun addOrGetExistsInfo(authorName: String): JAuthor? {
         return get(authorName) ?: let {
             return dslContext
                 .insertInto(AUTHOR, AUTHOR.AUTHOR_NAME)
@@ -49,7 +49,7 @@ class AuthorRepositoryImpl(
                 .doNothing()
                 .returningResult(AUTHOR.AUTHOR_ID, AUTHOR.AUTHOR_NAME)
                 .fetchOne()
-                ?.into(JAuthor::class.java)!!
+                ?.into(JAuthor::class.java)
         }
     }
 

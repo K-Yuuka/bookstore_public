@@ -9,7 +9,6 @@ import codetest.bookstore.db.generated.tables.JBook
 import codetest.bookstore.db.generated.tables.JBookAuthor
 
 
-
 /**
  * The table <code>public.author</code>.
  */

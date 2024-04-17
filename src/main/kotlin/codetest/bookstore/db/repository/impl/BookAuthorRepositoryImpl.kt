@@ -36,13 +36,13 @@ class BookAuthorRepositoryImpl(
         )
     }
 
-    override fun add(bookId: Int, authorId: Int): JBookAuthor {
+    override fun add(bookId: Int, authorId: Int): JBookAuthor? {
         return dslContext
             .insertInto(BOOK_AUTHOR, BOOK_AUTHOR.BOOK_ID, BOOK_AUTHOR.AUTHOR_ID)
             .values(bookId, authorId)
             .returningResult(BOOK_AUTHOR.BOOK_ID, BOOK_AUTHOR.AUTHOR_ID)
             .fetchOne()
-            ?.into(JBookAuthor::class.java)!!
+            ?.into(JBookAuthor::class.java)
     }
 
     override fun editAuthor(bookId: Int, authorId: Int): Boolean {

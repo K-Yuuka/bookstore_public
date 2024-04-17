@@ -33,7 +33,7 @@ open class JBookAuthorRecord() : UpdatableRecordImpl<JBookAuthorRecord>(JBookAut
     /**
      * Create a detached, initialised JBookAuthorRecord
      */
-    constructor(bookId: Int? = null, authorId: Int? = null): this() {
+    constructor(bookId: Int? = null, authorId: Int? = null) : this() {
         this.bookId = bookId
         this.authorId = authorId
         resetChangedOnNotNull()
@@ -42,7 +42,7 @@ open class JBookAuthorRecord() : UpdatableRecordImpl<JBookAuthorRecord>(JBookAut
     /**
      * Create a detached, initialised JBookAuthorRecord
      */
-    constructor(value: codetest.bookstore.db.generated.tables.pojos.JBookAuthor?): this() {
+    constructor(value: codetest.bookstore.db.generated.tables.pojos.JBookAuthor?) : this() {
         if (value != null) {
             this.bookId = value.bookId
             this.authorId = value.authorId

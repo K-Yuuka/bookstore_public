@@ -12,29 +12,7 @@ import codetest.bookstore.db.generated.keys.BOOK_AUTHOR__BOOK_AUTHOR_FK1
 import codetest.bookstore.db.generated.tables.JBook.JBookPath
 import codetest.bookstore.db.generated.tables.JBookAuthor.JBookAuthorPath
 import codetest.bookstore.db.generated.tables.records.JAuthorRecord
-
-import kotlin.collections.Collection
-import kotlin.collections.List
-
-import org.jooq.Condition
-import org.jooq.Field
-import org.jooq.ForeignKey
-import org.jooq.Identity
-import org.jooq.Index
-import org.jooq.InverseForeignKey
-import org.jooq.Name
-import org.jooq.Path
-import org.jooq.PlainSQL
-import org.jooq.QueryPart
-import org.jooq.Record
-import org.jooq.SQL
-import org.jooq.Schema
-import org.jooq.Select
-import org.jooq.Stringly
-import org.jooq.Table
-import org.jooq.TableField
-import org.jooq.TableOptions
-import org.jooq.UniqueKey
+import org.jooq.*
 import org.jooq.impl.DSL
 import org.jooq.impl.Internal
 import org.jooq.impl.SQLDataType
@@ -53,7 +31,7 @@ open class JAuthor(
     aliased: Table<JAuthorRecord>?,
     parameters: Array<Field<*>?>?,
     where: Condition?
-): TableImpl<JAuthorRecord>(
+) : TableImpl<JAuthorRecord>(
     alias,
     JPublic.PUBLIC,
     path,
@@ -81,44 +59,83 @@ open class JAuthor(
     /**
      * The column <code>public.author.author_id</code>.
      */
-    val AUTHOR_ID: TableField<JAuthorRecord, Int?> = createField(DSL.name("author_id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "")
+    val AUTHOR_ID: TableField<JAuthorRecord, Int?> =
+        createField(DSL.name("author_id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "")
 
     /**
      * The column <code>public.author.author_name</code>.
      */
-    val AUTHOR_NAME: TableField<JAuthorRecord, String?> = createField(DSL.name("author_name"), SQLDataType.VARCHAR(255).nullable(false), this, "")
+    val AUTHOR_NAME: TableField<JAuthorRecord, String?> =
+        createField(DSL.name("author_name"), SQLDataType.VARCHAR(255).nullable(false), this, "")
 
-    private constructor(alias: Name, aliased: Table<JAuthorRecord>?): this(alias, null, null, null, aliased, null, null)
-    private constructor(alias: Name, aliased: Table<JAuthorRecord>?, parameters: Array<Field<*>?>?): this(alias, null, null, null, aliased, parameters, null)
-    private constructor(alias: Name, aliased: Table<JAuthorRecord>?, where: Condition?): this(alias, null, null, null, aliased, null, where)
+    private constructor(alias: Name, aliased: Table<JAuthorRecord>?) : this(
+        alias,
+        null,
+        null,
+        null,
+        aliased,
+        null,
+        null
+    )
+
+    private constructor(alias: Name, aliased: Table<JAuthorRecord>?, parameters: Array<Field<*>?>?) : this(
+        alias,
+        null,
+        null,
+        null,
+        aliased,
+        parameters,
+        null
+    )
+
+    private constructor(alias: Name, aliased: Table<JAuthorRecord>?, where: Condition?) : this(
+        alias,
+        null,
+        null,
+        null,
+        aliased,
+        null,
+        where
+    )
 
     /**
      * Create an aliased <code>public.author</code> table reference
      */
-    constructor(alias: String): this(DSL.name(alias))
+    constructor(alias: String) : this(DSL.name(alias))
 
     /**
      * Create an aliased <code>public.author</code> table reference
      */
-    constructor(alias: Name): this(alias, null)
+    constructor(alias: Name) : this(alias, null)
 
     /**
      * Create a <code>public.author</code> table reference
      */
-    constructor(): this(DSL.name("author"), null)
+    constructor() : this(DSL.name("author"), null)
 
-    constructor(path: Table<out Record>, childPath: ForeignKey<out Record, JAuthorRecord>?, parentPath: InverseForeignKey<out Record, JAuthorRecord>?): this(Internal.createPathAlias(path, childPath, parentPath), path, childPath, parentPath, AUTHOR, null, null)
+    constructor(
+        path: Table<out Record>,
+        childPath: ForeignKey<out Record, JAuthorRecord>?,
+        parentPath: InverseForeignKey<out Record, JAuthorRecord>?
+    ) : this(Internal.createPathAlias(path, childPath, parentPath), path, childPath, parentPath, AUTHOR, null, null)
 
     /**
      * A subtype implementing {@link Path} for simplified path-based joins.
      */
     open class JAuthorPath : JAuthor, Path<JAuthorRecord> {
-        constructor(path: Table<out Record>, childPath: ForeignKey<out Record, JAuthorRecord>?, parentPath: InverseForeignKey<out Record, JAuthorRecord>?): super(path, childPath, parentPath)
-        private constructor(alias: Name, aliased: Table<JAuthorRecord>): super(alias, aliased)
+        constructor(
+            path: Table<out Record>,
+            childPath: ForeignKey<out Record, JAuthorRecord>?,
+            parentPath: InverseForeignKey<out Record, JAuthorRecord>?
+        ) : super(path, childPath, parentPath)
+
+        private constructor(alias: Name, aliased: Table<JAuthorRecord>) : super(alias, aliased)
+
         override fun `as`(alias: String): JAuthorPath = JAuthorPath(DSL.name(alias), this)
         override fun `as`(alias: Name): JAuthorPath = JAuthorPath(alias, this)
         override fun `as`(alias: Table<*>): JAuthorPath = JAuthorPath(alias.qualifiedName, this)
     }
+
     override fun getSchema(): Schema? = if (aliased()) null else JPublic.PUBLIC
     override fun getIndexes(): List<Index> = listOf(AUTHOR_IX3)
     override fun getIdentity(): Identity<JAuthorRecord, Int?> = super.getIdentity() as Identity<JAuthorRecord, Int?>
@@ -135,7 +152,7 @@ open class JAuthor(
         if (!this::_bookAuthor.isInitialized)
             _bookAuthor = JBookAuthorPath(this, null, BOOK_AUTHOR__BOOK_AUTHOR_FK1.inverseKey)
 
-        return _bookAuthor;
+        return _bookAuthor
     }
 
     val bookAuthor: JBookAuthorPath
@@ -147,6 +164,7 @@ open class JAuthor(
      */
     val book: JBookPath
         get(): JBookPath = bookAuthor().book()
+
     override fun `as`(alias: String): JAuthor = JAuthor(DSL.name(alias), this)
     override fun `as`(alias: Name): JAuthor = JAuthor(alias, this)
     override fun `as`(alias: Table<*>): JAuthor = JAuthor(alias.qualifiedName, this)
@@ -169,7 +187,8 @@ open class JAuthor(
     /**
      * Create an inline derived table from this table
      */
-    override fun where(condition: Condition?): JAuthor = JAuthor(qualifiedName, if (aliased()) this else null, condition)
+    override fun where(condition: Condition?): JAuthor =
+        JAuthor(qualifiedName, if (aliased()) this else null, condition)
 
     /**
      * Create an inline derived table from this table
@@ -189,22 +208,28 @@ open class JAuthor(
     /**
      * Create an inline derived table from this table
      */
-    @PlainSQL override fun where(condition: SQL): JAuthor = where(DSL.condition(condition))
+    @PlainSQL
+    override fun where(condition: SQL): JAuthor = where(DSL.condition(condition))
 
     /**
      * Create an inline derived table from this table
      */
-    @PlainSQL override fun where(@Stringly.SQL condition: String): JAuthor = where(DSL.condition(condition))
+    @PlainSQL
+    override fun where(@Stringly.SQL condition: String): JAuthor = where(DSL.condition(condition))
 
     /**
      * Create an inline derived table from this table
      */
-    @PlainSQL override fun where(@Stringly.SQL condition: String, vararg binds: Any?): JAuthor = where(DSL.condition(condition, *binds))
+    @PlainSQL
+    override fun where(@Stringly.SQL condition: String, vararg binds: Any?): JAuthor =
+        where(DSL.condition(condition, *binds))
 
     /**
      * Create an inline derived table from this table
      */
-    @PlainSQL override fun where(@Stringly.SQL condition: String, vararg parts: QueryPart): JAuthor = where(DSL.condition(condition, *parts))
+    @PlainSQL
+    override fun where(@Stringly.SQL condition: String, vararg parts: QueryPart): JAuthor =
+        where(DSL.condition(condition, *parts))
 
     /**
      * Create an inline derived table from this table

@@ -8,6 +8,7 @@ import codetest.bookstore.db.repository.BookRepository
 import codetest.bookstore.db.repository.NameIdRepository
 import codetest.bookstore.exception.ConflictException
 import codetest.bookstore.exception.NotFoundException
+import codetest.bookstore.exception.UnexpectedException
 import codetest.bookstore.model.AuthorAndRelationalBooks
 import codetest.bookstore.model.AuthorInfo
 import codetest.bookstore.model.BookAuthorInfo
@@ -37,10 +38,19 @@ class BookStoreServiceImpl(
             }
 
             else -> {
-                val book = bookRepository.add(bookName)
-                val author = authorRepository.addOrGetExistsInfo(authorName)
+                val book = bookRepository.add(bookName) ?: let {
+                    throw UnexpectedException("Failed to add book(name=${authorName}) data.")
+                }
+                val author = authorRepository.addOrGetExistsInfo(authorName) ?: let {
+                    throw UnexpectedException("Failed to add author(name=${authorName}) data.")
+                }
                 try {
-                    bookAuthorRepository.add(book.bookId!!, author.authorId!!)
+                    bookAuthorRepository.add(book.bookId!!, author.authorId!!) ?: let {
+                        throw UnexpectedException(
+                            "Failed to add author(name=${authorName}) and book(name=${authorName}) data."
+                        )
+                    }
+
                 } catch (ex: DataIntegrityViolationException) {
                     throw ConflictException(
                         "BookName='$bookName' and AuthorName='$authorName' have already registered.",
@@ -64,7 +74,6 @@ class BookStoreServiceImpl(
         }
     }
 
-
     override fun getAuthorListByName(authorName: String?): List<AuthorInfo> =
         getByName(authorRepository, authorName).map { toAuthor(it) }.toList()
 
@@ -78,7 +87,9 @@ class BookStoreServiceImpl(
         require(authorName.isNotBlank()) { "authorName does not allow blanks." }
         val targetBook = bookRepository.getById(bookId)
             ?: throw NotFoundException("bookId='$bookId' does not exist.")
-        val author = authorRepository.addOrGetExistsInfo(authorName)
+        val author = authorRepository.addOrGetExistsInfo(authorName) ?: let {
+            throw UnexpectedException("Failed to add author(name=${authorName}) data.")
+        }
 
         return when {
             bookAuthorRepository.exists(targetBook.bookName!!, authorName) -> {

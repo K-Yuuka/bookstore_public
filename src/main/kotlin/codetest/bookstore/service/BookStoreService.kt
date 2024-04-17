@@ -34,12 +34,12 @@ interface BookStoreService {
     /**
      * [bookId]で指定された書籍の名前を[bookName]に変更する
      */
-    fun editBookName(bookId: Int, bookName: String) : Unit
+    fun editBookName(bookId: Int, bookName: String): Unit
 
     /**
      * [authorId]で指定された著者の名前を[authorName]に変更する
      */
-    fun editAuthorName(authorId: Int, authorName: String) : Unit
+    fun editAuthorName(authorId: Int, authorName: String): Unit
 
     /**
      * [bookId]で指定された書籍の著者を[authorName]に変更する
@@ -49,10 +49,10 @@ interface BookStoreService {
     /**
      * [bookId]で指定された書籍を削除する
      */
-    fun deleteBook(bookId: Int) : Unit
+    fun deleteBook(bookId: Int): Unit
 
     /**
      * [authorId]で指定された著者を削除する
      */
-    fun deleteAuthor(authorId: Int) : Unit
+    fun deleteAuthor(authorId: Int): Unit
 }

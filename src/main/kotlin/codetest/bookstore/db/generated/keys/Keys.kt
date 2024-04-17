@@ -17,19 +17,40 @@ import org.jooq.impl.DSL
 import org.jooq.impl.Internal
 
 
-
 // -------------------------------------------------------------------------
 // UNIQUE and PRIMARY KEY definitions
 // -------------------------------------------------------------------------
 
-val AUTHOR_IX1: UniqueKey<JAuthorRecord> = Internal.createUniqueKey(JAuthor.AUTHOR, DSL.name("author_ix1"), arrayOf(JAuthor.AUTHOR.AUTHOR_NAME), true)
-val AUTHOR_PKC: UniqueKey<JAuthorRecord> = Internal.createUniqueKey(JAuthor.AUTHOR, DSL.name("author_pkc"), arrayOf(JAuthor.AUTHOR.AUTHOR_ID), true)
-val BOOK_PKC: UniqueKey<JBookRecord> = Internal.createUniqueKey(JBook.BOOK, DSL.name("book_pkc"), arrayOf(JBook.BOOK.BOOK_ID), true)
-val BOOK_AUTHOR_PKC: UniqueKey<JBookAuthorRecord> = Internal.createUniqueKey(JBookAuthor.BOOK_AUTHOR, DSL.name("book_author_pkc"), arrayOf(JBookAuthor.BOOK_AUTHOR.BOOK_ID, JBookAuthor.BOOK_AUTHOR.AUTHOR_ID), true)
+val AUTHOR_IX1: UniqueKey<JAuthorRecord> =
+    Internal.createUniqueKey(JAuthor.AUTHOR, DSL.name("author_ix1"), arrayOf(JAuthor.AUTHOR.AUTHOR_NAME), true)
+val AUTHOR_PKC: UniqueKey<JAuthorRecord> =
+    Internal.createUniqueKey(JAuthor.AUTHOR, DSL.name("author_pkc"), arrayOf(JAuthor.AUTHOR.AUTHOR_ID), true)
+val BOOK_PKC: UniqueKey<JBookRecord> =
+    Internal.createUniqueKey(JBook.BOOK, DSL.name("book_pkc"), arrayOf(JBook.BOOK.BOOK_ID), true)
+val BOOK_AUTHOR_PKC: UniqueKey<JBookAuthorRecord> = Internal.createUniqueKey(
+    JBookAuthor.BOOK_AUTHOR,
+    DSL.name("book_author_pkc"),
+    arrayOf(JBookAuthor.BOOK_AUTHOR.BOOK_ID, JBookAuthor.BOOK_AUTHOR.AUTHOR_ID),
+    true
+)
 
 // -------------------------------------------------------------------------
 // FOREIGN KEY definitions
 // -------------------------------------------------------------------------
 
-val BOOK_AUTHOR__BOOK_AUTHOR_FK1: ForeignKey<JBookAuthorRecord, JAuthorRecord> = Internal.createForeignKey(JBookAuthor.BOOK_AUTHOR, DSL.name("book_author_fk1"), arrayOf(JBookAuthor.BOOK_AUTHOR.AUTHOR_ID), codetest.bookstore.db.generated.keys.AUTHOR_PKC, arrayOf(JAuthor.AUTHOR.AUTHOR_ID), true)
-val BOOK_AUTHOR__BOOK_AUTHOR_FK2: ForeignKey<JBookAuthorRecord, JBookRecord> = Internal.createForeignKey(JBookAuthor.BOOK_AUTHOR, DSL.name("book_author_fk2"), arrayOf(JBookAuthor.BOOK_AUTHOR.BOOK_ID), codetest.bookstore.db.generated.keys.BOOK_PKC, arrayOf(JBook.BOOK.BOOK_ID), true)
+val BOOK_AUTHOR__BOOK_AUTHOR_FK1: ForeignKey<JBookAuthorRecord, JAuthorRecord> = Internal.createForeignKey(
+    JBookAuthor.BOOK_AUTHOR,
+    DSL.name("book_author_fk1"),
+    arrayOf(JBookAuthor.BOOK_AUTHOR.AUTHOR_ID),
+    AUTHOR_PKC,
+    arrayOf(JAuthor.AUTHOR.AUTHOR_ID),
+    true
+)
+val BOOK_AUTHOR__BOOK_AUTHOR_FK2: ForeignKey<JBookAuthorRecord, JBookRecord> = Internal.createForeignKey(
+    JBookAuthor.BOOK_AUTHOR,
+    DSL.name("book_author_fk2"),
+    arrayOf(JBookAuthor.BOOK_AUTHOR.BOOK_ID),
+    BOOK_PKC,
+    arrayOf(JBook.BOOK.BOOK_ID),
+    true
+)

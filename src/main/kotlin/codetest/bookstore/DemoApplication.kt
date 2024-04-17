@@ -13,5 +13,5 @@ class DemoApplication
  * メイン
  */
 fun main(args: Array<String>) {
-    runApplication<codetest.bookstore.DemoApplication>(*args)
+    runApplication<DemoApplication>(*args)
 }
