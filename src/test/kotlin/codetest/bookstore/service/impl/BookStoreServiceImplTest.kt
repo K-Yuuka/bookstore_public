@@ -34,8 +34,6 @@ class BookStoreServiceImplTest {
     @Autowired
     private lateinit var service: BookStoreService
 
-    data class AuthorBookPair(val pair: Pair<JAuthor, List<JBook>>)
-
     @BeforeTest
     fun beforeTest() {
     }
@@ -499,7 +497,6 @@ class BookStoreServiceImplTest {
     @Test
     fun editAuthor_failure_addAuthorReturnNull() {
         val expectedBook = JBook(1, "book1")
-        val expectedAuthor = JAuthor(2, "author1")
         every { bookRepository.getById(any()) } returns expectedBook
         every { authorRepository.addOrGetExistsInfo(any()) } returns null
         every { bookAuthorRepository.exists(any(), any()) } returns true

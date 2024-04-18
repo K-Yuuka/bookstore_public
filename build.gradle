@@ -19,7 +19,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.spring' version '1.9.23'
     id "org.jooq.jooq-codegen-gradle" version "3.19.6"
     id "org.openapi.generator" version "7.4.0"
-    //id "org.postgresql" version "42.7.3"
+    id "jacoco"
 }
 
 group = 'com.example'
